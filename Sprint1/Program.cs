@@ -10,6 +10,46 @@ namespace SistemaBancario
         public decimal Balance { get; protected set; }
         public decimal LoanLimit { get; protected set; }
 
+        //public void CreateAccount(string accountType)
+        //{
+        //    Console.WriteLine("Insira seu nome:");
+        //    Console.ReadLine();
+
+        //    Console.
+
+        //}
+
+        public void Deposit()
+        {
+            string userInput;
+            bool isValidInput;
+            decimal depositValue;
+
+            Console.WriteLine("Insira o valor do depósito:");
+            userInput = Console.ReadLine();
+            isValidInput = decimal.TryParse(userInput, out depositValue);
+
+            while (!isValidInput || depositValue <= 0)
+            {
+                Console.WriteLine("Valor inválido");
+                Console.WriteLine("Insira o valor do depósito:");
+                userInput = Console.ReadLine();
+                isValidInput = decimal.TryParse(userInput, out depositValue);
+            }
+
+            Balance += depositValue;
+            Console.WriteLine("Depósito concluído com sucesso! Saldo atual: {0}", Balance);
+        }
+
+        abstract public void Withdrawal(decimal amount);
+
+        public BankAccount (int number, string owner, decimal balance)
+        {
+            this.Number = number;
+            this.Owner = owner;
+            this.Balance = balance;
+        }
+
         public void Loan(decimal value)
         {
             if (value > LoanLimit)
@@ -21,15 +61,6 @@ namespace SistemaBancario
             LoanLimit -= value;
             Balance += value;
             Console.WriteLine("Empréstimo concedido! Saldo atual: {0}", Balance);
-        }
-
-        abstract public void Withdrawal(decimal amount);
-
-        public BankAccount (int number, string owner, decimal balance)
-        {
-            this.Number = number;
-            this.Owner = owner;
-            this.Balance = balance;
         }
     }
     class CheckingAccount : BankAccount
@@ -180,23 +211,29 @@ namespace SistemaBancario
     {
         static void Main ()
         {
-            Menu menus = new Menu();
-            int option = menus.Home();
+            //List<CheckingAccount> checkingAccounts = new List<CheckingAccount>();
+            //List<SavingAccount> savingAccounts = new List<SavingAccount>();
+            //List<BusinessAccount> businessAccounts = new List<BusinessAccount>();
 
-            switch (option) {
-                case 1:
-                    menus.AccountType();
-                    break;
+            //Menu menus = new Menu();
+            //int option = menus.Home();
 
-                case 2:
-                    break;
+            //switch (option) {
+            //    case 1:
+            //        menus.AccountType();
+            //        break;
 
-                default:
-                    Console.WriteLine("Opção inválida!");
-                    break;
+            //    case 2:
+            //        break;
 
-            }
+            //    default:
+            //        Console.WriteLine("Opção inválida!");
+            //        break;
 
+            //}
+
+            CheckingAccount conta1 = new CheckingAccount(001, "Bilu", 300);
+            conta1.Deposit();
 
         }
     }
