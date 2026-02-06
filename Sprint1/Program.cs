@@ -1,23 +1,109 @@
 ﻿// tem mudar a política de cálculo de limite loan
 // transferência de dinheiro função
+// as operações precisam receber a conta como parâmetro
+// fazer função de percorrer a lista e colocar na função de criar conta
 
+
+using System.ComponentModel;
 
 namespace SistemaBancario
 {
+    class Menu
+    {
+        public int Home()
+        {
+            string userInput;
+            bool isValidInput;
+            int option = 1;
+
+            while (option > 0)
+            {
+                Console.WriteLine("Selecione uma opção a seguir: ");
+                Console.WriteLine("1 - Criar Conta");
+                Console.WriteLine("2 - Entrar na Conta");
+                Console.WriteLine("3 - Modo DEV");
+                Console.WriteLine("0 - Sair");
+                userInput = Console.ReadLine();
+
+                isValidInput = int.TryParse(userInput, out option);
+
+                if (isValidInput) return option;
+            }
+
+            return 0;
+        }
+
+        public int AccountType()
+        {
+            string userInput;
+            bool isValidInput;
+            int option = 1;
+
+            while (option > 0)
+            {
+                Console.WriteLine("Selecione o tipo da conta: ");
+                Console.WriteLine("1 - Corrente");
+                Console.WriteLine("2 - Empresarial");
+                Console.WriteLine("3 - Poupança");
+                Console.WriteLine("0 - Sair");
+                userInput = Console.ReadLine();
+
+                isValidInput = int.TryParse(userInput, out option);
+
+                if (isValidInput) return option;
+                else Console.WriteLine("Opção inválida!");
+            }
+
+            return 0;
+        }
+
+    }
+
+
     abstract class BankAccount {
         public decimal Number { get; protected set; }
         public string Owner { get; protected set; }
-        public decimal Balance { get; protected set; }
+        public decimal Balance { get; protected set; } = 0;
         public decimal LoanLimit { get; protected set; }
 
-        //public void CreateAccount(string accountType)
-        //{
-        //    Console.WriteLine("Insira seu nome:");
-        //    Console.ReadLine();
+        public BankAccount CreateAccount(int accountType)
+        {
+            Random rdn = new Random();
+            string ownerName;
+            int accountNumber = rdn.Next(100000, 200000);
 
-        //    Console.
+            Console.WriteLine("Insira seu nome:");
+            ownerName = Console.ReadLine();
 
-        //}
+
+            // verifique o nome, não pode nulo
+            BankAccount account = null;
+            
+            switch (accountType)
+            {
+                case 1:
+                    account = new SavingAccount(accountNumber, ownerName, 0);
+                    break;
+
+                case 2:
+                    account = new CheckingAccount(accountNumber, ownerName, 0);
+                    break;
+
+                case 3:
+                    account = new BusinessAccount(accountNumber, ownerName, 0);
+                    break;
+
+            }
+
+            if(account == null)
+            {
+                Console.WriteLine("Não foi possível criar a conta. Tente novamente.");
+                return CreateAccount(accountType);
+            }
+
+            Console.WriteLine("Sucesso! Sua conta foi criada.");
+            return account;
+        }
 
         public void Deposit()
         {
@@ -152,56 +238,6 @@ namespace SistemaBancario
         }
     }
 
-    class Menu
-    {
-        public int Home()
-        {
-            string userInput;
-            bool isValidInput;
-            int option = 1;
-
-            while (option > 0)
-            {
-                Console.WriteLine("Selecione uma opção a seguir: ");
-                Console.WriteLine("1 - Criar Conta");
-                Console.WriteLine("2 - Modo DEV");
-                Console.WriteLine("0 - Sair");
-                userInput = Console.ReadLine();
-
-                isValidInput = int.TryParse(userInput, out option);
-
-                if (isValidInput) return option;
-            }
-
-            return 0;
-        }
-
-        public int AccountType()
-        {
-            string userInput;
-            bool isValidInput;
-            int option = 1;
-
-            while (option > 0)
-            {
-                Console.WriteLine("Selecione o tipo da conta: ");
-                Console.WriteLine("1 - Corrente");
-                Console.WriteLine("2 - Empresarial");
-                Console.WriteLine("3 - Poupança");
-                Console.WriteLine("0 - Sair");
-                userInput = Console.ReadLine();
-
-                isValidInput = int.TryParse(userInput, out option);
-
-                if (isValidInput) return option;
-                else Console.WriteLine("Opção inválida!");
-            }
-
-            return 0;
-        }
-
-    }
-
     class Utils
     {
 
@@ -211,29 +247,29 @@ namespace SistemaBancario
     {
         static void Main ()
         {
-            //List<CheckingAccount> checkingAccounts = new List<CheckingAccount>();
-            //List<SavingAccount> savingAccounts = new List<SavingAccount>();
-            //List<BusinessAccount> businessAccounts = new List<BusinessAccount>();
+            List<CheckingAccount> checkingAccounts = new List<CheckingAccount>();
+            List<SavingAccount> savingAccounts = new List<SavingAccount>();
+            List<BusinessAccount> businessAccounts = new List<BusinessAccount>();
 
-            //Menu menus = new Menu();
-            //int option = menus.Home();
+            Menu menus = new Menu();
+            int option = menus.Home();
 
-            //switch (option) {
-            //    case 1:
-            //        menus.AccountType();
-            //        break;
+            switch (option)
+            {
+                case 1:
+                    menus.AccountType();
+                    break;
 
-            //    case 2:
-            //        break;
+                case 2:
+                    break;
 
-            //    default:
-            //        Console.WriteLine("Opção inválida!");
-            //        break;
+                default:
+                    Console.WriteLine("Opção inválida!");
+                    break;
 
-            //}
+            }
 
             CheckingAccount conta1 = new CheckingAccount(001, "Bilu", 300);
-            conta1.Deposit();
 
         }
     }
