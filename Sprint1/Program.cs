@@ -66,7 +66,7 @@ namespace SistemaBancario
         public decimal Balance { get; protected set; } = 0;
         public decimal LoanLimit { get; protected set; }
 
-        public BankAccount CreateAccount(int accountType)
+        abstract public BankAccount CreateAccount()
         {
             Random rdn = new Random();
             string ownerName;
@@ -157,6 +157,7 @@ namespace SistemaBancario
 
         private decimal WithdrawalTax { get; set; } = 0.05m;
 
+        public
         public override void Withdrawal (decimal value)
         {
             decimal total = (value * WithdrawalTax) + value;
@@ -247,30 +248,35 @@ namespace SistemaBancario
     {
         static void Main ()
         {
-            List<CheckingAccount> checkingAccounts = new List<CheckingAccount>();
-            List<SavingAccount> savingAccounts = new List<SavingAccount>();
-            List<BusinessAccount> businessAccounts = new List<BusinessAccount>();
+           List<CheckingAccount> checkingAccounts = new List<CheckingAccount>();
+            //List<SavingAccount> savingAccounts = new List<SavingAccount>();
+            //List<BusinessAccount> businessAccounts = new List<BusinessAccount>();
 
-            Menu menus = new Menu();
-            int option = menus.Home();
+            //Menu menus = new Menu();
+            //int option = menus.Home();
 
-            switch (option)
-            {
-                case 1:
-                    menus.AccountType();
-                    break;
+            //switch (option)
+            //{
+            //    case 1:
+            //        menus.AccountType();
+            //        break;
 
-                case 2:
-                    break;
+            //    case 2:
+            //        break;
 
-                default:
-                    Console.WriteLine("Opção inválida!");
-                    break;
+            //    default:
+            //        Console.WriteLine("Opção inválida!");
+            //        break;
 
-            }
+            //}
 
-            CheckingAccount conta1 = new CheckingAccount(001, "Bilu", 300);
 
+
+            CheckingAccount conta1 = new CheckingAccount(001, "Bilu", 300)
+                
+                conta.CreateAccount()
+
+            conta1.CreateAccount()
         }
     }
 }
