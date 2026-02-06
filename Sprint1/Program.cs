@@ -1,5 +1,6 @@
 ﻿// tem mudar a política de cálculo de limite loan
-// 
+// transferência de dinheiro função
+
 
 namespace SistemaBancario
 {
@@ -37,16 +38,11 @@ namespace SistemaBancario
             LoanLimit = (balance * 0.3m) + balance;
         }
 
-        private decimal withdrawalTax = 0.05m;
-        public decimal WithdrawalTax
-        {
-            get { return withdrawalTax; }
-            set { withdrawalTax = value; }
-        }
+        private decimal WithdrawalTax { get; set; } = 0.05m;
 
         public override void Withdrawal (decimal value)
         {
-            decimal total = (value * withdrawalTax) + value;
+            decimal total = (value * WithdrawalTax) + value;
             if (total > Balance)
             {
                 Console.WriteLine("Saldo insuficiente!");
@@ -65,13 +61,7 @@ namespace SistemaBancario
             LoanLimit = (balance * 0.3m) + balance;
         }
 
-        private decimal income = 0.005m;
-
-        public decimal Income
-        {
-            get { return income; }
-            set { income = value; }
-        }
+        private decimal Income { get; set; } = 0.005m;
 
         public override void Withdrawal (decimal value)
         {
@@ -105,7 +95,7 @@ namespace SistemaBancario
             }
 
             amount = Balance;
-            for (int i = range; i > 0; i--) amount = (amount * income) + amount;
+            for (int i = range; i > 0; i--) amount = (amount * Income) + amount;
 
             Console.WriteLine("Em {0} meses, seu saldo será de {1:n2}", range, amount);
         }
@@ -131,48 +121,6 @@ namespace SistemaBancario
         }
     }
 
-    class atividade1
-    {
-        public decimal divida = 5000;
-        public bool dividaQuitada;
-        public string nome, userValor;
-        public bool isInputValid;
-        public decimal valor;
-
-        public void pagarDivida ()
-        {
-            Console.WriteLine("Digite seu nome:");
-            nome = Console.ReadLine();
-
-            while (!isInputValid || !dividaQuitada)
-            {
-                Console.WriteLine("Digite o valor que deseja pagar:");
-                userValor = Console.ReadLine();
-
-                isInputValid = decimal.TryParse(userValor, out valor);
-
-                if (!isInputValid || valor < 1)
-                {
-                    Console.WriteLine("Valor inválido!");
-                    continue;
-                }
-
-                divida -= valor;
-
-                if (valor < divida)
-                {
-                    decimal sobra = divida - valor;
-                    Console.WriteLine("Você ainda deve R${0:n2}", sobra);
-                    continue;
-                }
-
-                Console.WriteLine("Sua dívida foi quitada, {0}!", nome);
-                dividaQuitada = true;
-            }
-            
-        }
-    }
-
     class Menu
     {
         public int Home()
@@ -181,10 +129,11 @@ namespace SistemaBancario
             bool isValidInput;
             int option = 1;
 
-            while (option > 0 && option < 2)
+            while (option > 0)
             {
                 Console.WriteLine("Selecione uma opção a seguir: ");
                 Console.WriteLine("1 - Criar Conta");
+                Console.WriteLine("2 - Modo DEV");
                 Console.WriteLine("0 - Sair");
                 userInput = Console.ReadLine();
 
@@ -202,7 +151,7 @@ namespace SistemaBancario
             bool isValidInput;
             int option = 1;
 
-            while (option > 0 && option < 4)
+            while (option > 0)
             {
                 Console.WriteLine("Selecione o tipo da conta: ");
                 Console.WriteLine("1 - Corrente");
@@ -222,12 +171,31 @@ namespace SistemaBancario
 
     }
 
+    class Utils
+    {
+
+    }
+
     class Program
     {
         static void Main ()
         {
-            //atividade1 atividade = new atividade1();
-            //atividade.pagarDivida();
+            Menu menus = new Menu();
+            int option = menus.Home();
+
+            switch (option) {
+                case 1:
+                    menus.AccountType();
+                    break;
+
+                case 2:
+                    break;
+
+                default:
+                    Console.WriteLine("Opção inválida!");
+                    break;
+
+            }
 
 
         }
