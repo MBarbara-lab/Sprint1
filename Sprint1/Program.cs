@@ -2,9 +2,6 @@
 // transferência de dinheiro função
 // as operações precisam receber a conta como parâmetro
 
-// corrigir:
-//    - lógica de cálculo de juros compostos -> amount *= (1 + Income)
-
 using System.ComponentModel;
 
 namespace SistemaBancario
@@ -35,6 +32,34 @@ namespace SistemaBancario
                     Console.WriteLine("Opção inválida!");
                     option = 1;                             // caso a conversão falhe, TryParse atribui 0 ao segundo parâmetro
                 } 
+            }
+
+            return 0;
+        }
+        public static int User(Person Person)
+        {
+            string? userInput;
+            bool isValidInput;
+            int option = 1;
+
+            while (option > 0)
+            {
+                Console.WriteLine("Olá, {0}! Selecione sua conta: ", Person.Name);
+                Console.WriteLine("1 - Listar Contas");
+                Console.WriteLine("2 - Empresarial");
+                Console.WriteLine("3 - Poupança");
+                Console.WriteLine("0 - Sair");
+                userInput = Console.ReadLine();
+
+                isValidInput = int.TryParse(userInput, out option);
+
+                if (isValidInput) return option;
+                else
+                {
+                    Console.Clear();
+                    Console.WriteLine("Opção inválida!");
+                    option = 1;
+                }
             }
 
             return 0;
@@ -98,11 +123,25 @@ namespace SistemaBancario
 
     }
 
+    class Person
+    {
+        public int Age { get; set; }
+        public string? Cpf { get; set; }
+        public string? Name { get; set; }
+
+        public Person (int age, string? cpf, string? name)
+        {
+            Age = age;
+            Cpf = cpf;
+            Name = name;
+        }
+    }
     abstract class BankAccount {
-        public decimal Number { get; protected set; }
-        public string Owner { get; protected set; }
         public decimal Balance { get; protected set; } = 0;
         public decimal LoanLimit { get; protected set; }
+        public decimal Number { get; protected set; }
+        public Person Owner { get; protected set; }
+        public string? Type { get; protected set; }
 
         abstract public void Withdrawal(decimal amount);
 
@@ -125,15 +164,15 @@ namespace SistemaBancario
             Console.WriteLine("Depósito concluído com sucesso! Saldo atual: {0}", Balance);
         }
 
-        public void Transfer (BankAccount source, BankAccount destination, decimal value)
-        {
-            if (source.Balance < value)
-            {
+        //public void Transfer (BankAccount destination, decimal value)
+        //{
+        //    if (Balance < value)
+        //    {
+                
+        //    }
+        //}
 
-            }
-        }
-
-        public BankAccount (int number, string owner, decimal balance)
+        public BankAccount (int number, Person owner, decimal balance)
         {
             this.Number = number;
             this.Owner = owner;
@@ -153,10 +192,12 @@ namespace SistemaBancario
             Console.WriteLine("Empréstimo concedido! Saldo atual: {0}", Balance);
         }
     }
+
     class CheckingAccount : BankAccount
     {
-        public CheckingAccount (int number, string owner, decimal balance) : base(number, owner, balance) {
+        public CheckingAccount (int number, Person owner, decimal balance) : base(number, owner, balance) {
             LoanLimit = (balance * 0.3m) + balance;
+            Type = "Corrente";
         }
 
         private decimal WithdrawalTax { get; set; } = 0.05m;
@@ -177,9 +218,10 @@ namespace SistemaBancario
 
     class SavingAccount : BankAccount
     {
-        public SavingAccount(int number, string owner, decimal balance) : base(number, owner, balance)
+        public SavingAccount(int number, Person owner, decimal balance) : base(number, owner, balance)
         {
             LoanLimit = (balance * 0.3m) + balance;
+            Type = "Poupança";
         }
 
         private decimal Income { get; set; } = 0.005m;
@@ -213,7 +255,7 @@ namespace SistemaBancario
             } while (!isValidInput || range < 1);
 
             amount = Balance;
-            for (int i = range; i > 0; i--) amount = (amount * Income) + amount;
+            for (int i = range; i > 0; i--) amount *= (1 + Income);
 
             Console.WriteLine("Em {0} meses, seu saldo será de {1:n2}", range, amount);
         }
@@ -221,9 +263,10 @@ namespace SistemaBancario
 
     class BusinessAccount : BankAccount
     {
-        public BusinessAccount(int number, string owner, decimal balance) : base(number, owner, balance)
+        public BusinessAccount(int number, Person owner, decimal balance) : base(number, owner, balance)
         {
             LoanLimit = (balance * 0.5m) + balance;
+            Type = "Empresarial";
         }
 
         public override void Withdrawal (decimal value)
@@ -244,9 +287,10 @@ namespace SistemaBancario
         public static void PrintAccounts<T>(List<T>list) where T : BankAccount {
             foreach (T account in list)
             {
-                Console.WriteLine("Conta {0}", account.Number);
-                Console.WriteLine("  Titular - {0}", account.Owner);
-                Console.WriteLine("  Saldo - R$ {0}", account.Balance);
+                Console.WriteLine("Titular {0}", account.Owner.Name);
+                Console.WriteLine(" Tipo:  {0}", account.Type);
+                Console.WriteLine(" Conta: {0}", account.Number);
+                Console.WriteLine(" Saldo: R$ {0:n2}", account.Balance);
             }
         }
     }
@@ -255,12 +299,9 @@ namespace SistemaBancario
     {
         static void Main ()
         {
-            List<CheckingAccount> checkingAccounts = new List<CheckingAccount>();
-            List<SavingAccount> savingAccounts = new List<SavingAccount>();
-            List<BusinessAccount> businessAccounts = new List<BusinessAccount>();
+            List<BankAccount> bankAccounts = new List<BankAccount>();
 
             int option = 1;
-            
             while (option != 0)
             {
                 option = Menu.Home();
@@ -273,16 +314,79 @@ namespace SistemaBancario
                     case 1:
                         Console.Clear();
                         Random rdn = new Random();
-                        string? ownerName = "";
+                        string? userInput;
+                        bool isValidInput;
                         int accountNumber;
+                        int ownerAge;
+                        string? ownerCpf;
+                        string? ownerName;
 
+                        //validação nome
                         do
                         {
+                            isValidInput = true;
                             Console.WriteLine("Insira seu nome:");
                             ownerName = Console.ReadLine();
                             ownerName = ownerName?.Trim() ?? "";
                             if (ownerName == "") Console.WriteLine("Seu nome não pode ser nulo! Tente novamente.");
-                        } while (ownerName == "");
+
+                            foreach (char letter in ownerName)
+                            {
+                                if (!char.IsLetter(letter) && !char.IsWhiteSpace(letter))
+                                {
+                                    Console.WriteLine("Seu nome deve conter apenas letras e espaços! Tente novamente.");
+                                    isValidInput = false;
+                                    break;
+                                }
+                            }
+                        } while (ownerName == "" || !isValidInput);
+
+                        //validação cpf
+                        do
+                        {
+                            isValidInput = true;
+                            Console.WriteLine("Insira seu CPF: (Apenas dígitos)");
+                            ownerCpf = Console.ReadLine();
+                            ownerCpf = ownerCpf?.Trim() ?? "";
+                            if (ownerCpf == "")
+                            {
+                                Console.WriteLine("Seu CPF não pode ser nulo! Tente novamente.");
+                                continue;
+                            }
+
+                            foreach (char digit in ownerCpf)
+                            {
+                                if (!char.IsDigit(digit))
+                                {
+                                    Console.WriteLine("Seu CPF deve conter apenas dígitos! Tente novamente.");
+                                    isValidInput = false;
+                                    break;
+                                }
+                            }
+
+                        } while (ownerCpf == "" || !isValidInput);
+
+                        //validação idade
+                        do
+                        {
+                            Console.WriteLine("Insira sua idade:");
+                            userInput = Console.ReadLine();
+                            isValidInput = int.TryParse(userInput, out ownerAge);
+
+                            if (!isValidInput || ownerAge <= 0) 
+                            {
+                                Console.WriteLine("Idade inválida");
+                                continue;
+                            }
+                            
+                            if (ownerAge < 18)
+                            {
+                                Console.WriteLine("Você não possui idade suficiente para abrir uma conta!");
+                                isValidInput = false;
+                            } 
+                        } while (!isValidInput || ownerAge <= 0);
+
+                        Person newClient = new Person(ownerAge, ownerCpf, ownerName);
 
                         int typeOption = 1;
                         while (typeOption != 0)
@@ -296,20 +400,20 @@ namespace SistemaBancario
 
                                 case 1:
                                     Console.Clear();
-                                    accountNumber = rdn.Next(100000, 200000);
-                                    checkingAccounts.Add(new CheckingAccount(accountNumber, ownerName, 0));
+                                    accountNumber = rdn.Next(100, 200); // valor ideal: 100000, 20000
+                                    bankAccounts.Add(new CheckingAccount(accountNumber, newClient, 0));
                                     break;
 
                                 case 2:
                                     Console.Clear();
-                                    accountNumber = rdn.Next(100000, 200000);
-                                    businessAccounts.Add(new BusinessAccount(accountNumber, ownerName, 0));
+                                    accountNumber = rdn.Next(100, 200);
+                                    bankAccounts.Add(new BusinessAccount(accountNumber, newClient, 0));
                                     break;
 
                                 case 3:
                                     Console.Clear();
-                                    accountNumber = rdn.Next(100000, 200000);
-                                    savingAccounts.Add(new SavingAccount(accountNumber, ownerName, 0));
+                                    accountNumber = rdn.Next(100, 200);
+                                    bankAccounts.Add(new SavingAccount(accountNumber, newClient, 0));
                                     break;
 
                                 default:
@@ -318,6 +422,10 @@ namespace SistemaBancario
                                     break;
                             }
                         }
+                        break;
+
+                    case 2:
+
                         break;
 
                     case 3:
@@ -334,12 +442,8 @@ namespace SistemaBancario
 
                                 case 1:
                                     Console.Clear();
-                                    Console.WriteLine("check");
-                                    Utils.PrintAccounts(checkingAccounts);
-                                    Console.WriteLine("business");
-                                    Utils.PrintAccounts(businessAccounts);
-                                    Console.WriteLine("sav");
-                                    Utils.PrintAccounts(savingAccounts);
+                                    Utils.PrintAccounts(bankAccounts);
+                                    
                                     break;
 
                                 default:
