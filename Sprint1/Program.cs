@@ -3,8 +3,11 @@
 // as operações precisam receber a conta como parâmetro
 // centralizar validações em uma classe
 
+// EM PROPGRESSO: TRANSAÇÕES DEPOIUS DE SELECIONAR CONTA
+
 using System;
 using System.ComponentModel;
+using System.Security.Principal;
 
 namespace SistemaBancario
 {
@@ -38,9 +41,10 @@ namespace SistemaBancario
 
             return 0;
         }
-        public static int UserAccounts(Person person, List<BankAccount> bankAccounts)
+        public static BankAccount? UserAccounts(Person person, List<BankAccount> bankAccounts)
         {
-            if (person == null) return 0;
+            List<BankAccount> userAccounts = new List<BankAccount>();
+            if (person == null) return null;
 
             string? userInput;
             bool isValidInput;
@@ -50,18 +54,51 @@ namespace SistemaBancario
             {
                 Console.WriteLine("Olá, {0}! Selecione sua conta: ", person.Name);
 
-                //int i = 1;
-                //foreach (BankAccount account in bankAccounts)
-                //{
-                //    if (account.Owner.Cpf == person.Cpf)
-                //    {
-                //        Console.WriteLine("Opção {0}", i);
-                //        Console.WriteLine("Conta {0}", account.Type);
-                //        Console.Write("Saldo: {0}", account.Balance);
-                //        Console.Write("\tNumero da conta: {0}\n", account.Number);
-                //    }
-                //}
+                int i = 1;
+                foreach (BankAccount account in bankAccounts)
+                {
+                    if (account.Owner.Cpf == person.Cpf)
+                    {
+                        Console.WriteLine("#{0} - Conta {1}", i, account.Type);
+                        Console.Write("Saldo: {0}", account.Balance);
+                        Console.Write("\tNumero da conta: {0}\n", account.Number);
+                        userAccounts.Add(account);
+                        i++;
+                    }
+                }
+                Console.WriteLine("\n0 - Sair");
+                
+                userInput = Console.ReadLine();
+                isValidInput = int.TryParse(userInput, out option);
+                if (!isValidInput) option = 1;
+                else if (option >= i || option <= 0)
+                {
+                    Console.WriteLine("Selecionou {0} - Conta {1}", option, userAccounts[option - 1].Type);
+                    isValidInput = false;
+                    continue;
+                }
 
+                Console.WriteLine("Selecionou {0} - Conta {1}", i, userAccounts[option-1].Type);
+                return userAccounts[option-1];
+            }
+
+            return null;
+        }
+        public static int Transactions(BankAccount account)
+        {
+            if (account == null) return 0;
+
+            string? userInput;
+            bool isValidInput;
+            int option = 1;
+
+            while (option > 0)
+            {
+                Console.WriteLine("Selecione a transação que deseja realizar: ");
+                Console.WriteLine("1 - Depositar");
+                Console.WriteLine("2 - Empréstimo");
+                Console.WriteLine("3 - Sacar");
+                Console.WriteLine("4 - Transferir");
                 Console.WriteLine("0 - Sair");
                 userInput = Console.ReadLine();
 
@@ -478,6 +515,7 @@ namespace SistemaBancario
                         do
                         {
                             isValidInput = true;
+                            Console.Clear();
                             Console.WriteLine("Insira seu CPF: (Apenas dígitos)");
                             ownerCpf = Console.ReadLine();
                             ownerCpf = ownerCpf?.Trim() ?? "";
@@ -515,9 +553,39 @@ namespace SistemaBancario
                         {
                             client = Utils.SearchOwner(owners, ownerCpf);
                         }
+                        BankAccount? currentAccount = Menu.UserAccounts(client, bankAccounts);
 
-                            int userOption = Menu.User(client);
+                        int transactionOption = 1;
+                        while (transactionOption != 0)
+                        {
+                            transactionOption = Menu.Transactions(currentAccount);
+                            switch (option)
+                            {
+                                case 0:
+                                    Console.Clear();
+                                    break;
 
+                                case 1:
+                                    Console.Clear();
+                                    Console.WriteLine("Op1");
+                                    break;
+
+                                case 2:
+                                    Console.Clear();
+                                    Console.WriteLine("Op2");
+                                    break;
+
+                                case 3:
+                                    Console.Clear();
+                                    Console.WriteLine("Op3");
+                                    break;
+
+                                default:
+                                    Console.Clear();
+                                    Console.WriteLine("Opção inválida! Tente novamente.");
+                                    break;
+                            }
+                        }
                         break;
 
                     case 3:
