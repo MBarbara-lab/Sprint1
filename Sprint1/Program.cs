@@ -1,7 +1,9 @@
 ﻿// tem mudar a política de cálculo de limite loan
 // transferência de dinheiro função
 // as operações precisam receber a conta como parâmetro
+// centralizar validações em uma classe
 
+using System;
 using System.ComponentModel;
 
 namespace SistemaBancario
@@ -16,7 +18,7 @@ namespace SistemaBancario
 
             while (option > 0)
             {
-                Console.WriteLine("Selecione uma opção a seguir: ");
+                Console.WriteLine("O que deseja fazer?");
                 Console.WriteLine("1 - Criar Conta");
                 Console.WriteLine("2 - Entrar na Conta");
                 Console.WriteLine("3 - Modo DEV");
@@ -36,18 +38,30 @@ namespace SistemaBancario
 
             return 0;
         }
-        public static int User(Person Person)
+        public static int UserAccounts(Person person, List<BankAccount> bankAccounts)
         {
+            if (person == null) return 0;
+
             string? userInput;
             bool isValidInput;
             int option = 1;
 
             while (option > 0)
             {
-                Console.WriteLine("Olá, {0}! Selecione sua conta: ", Person.Name);
-                Console.WriteLine("1 - Listar Contas");
-                Console.WriteLine("2 - Empresarial");
-                Console.WriteLine("3 - Poupança");
+                Console.WriteLine("Olá, {0}! Selecione sua conta: ", person.Name);
+
+                //int i = 1;
+                //foreach (BankAccount account in bankAccounts)
+                //{
+                //    if (account.Owner.Cpf == person.Cpf)
+                //    {
+                //        Console.WriteLine("Opção {0}", i);
+                //        Console.WriteLine("Conta {0}", account.Type);
+                //        Console.Write("Saldo: {0}", account.Balance);
+                //        Console.Write("\tNumero da conta: {0}\n", account.Number);
+                //    }
+                //}
+
                 Console.WriteLine("0 - Sair");
                 userInput = Console.ReadLine();
 
@@ -293,6 +307,15 @@ namespace SistemaBancario
                 Console.WriteLine(" Saldo: R$ {0:n2}", account.Balance);
             }
         }
+
+        public static Person? SearchOwner<T>(List<T> owners, string searchedValue) where T : Person
+        {
+            foreach (T person in owners)
+            {
+                if (person.Cpf == searchedValue) return person;
+            }
+            return null;
+        }
     }
 
     class Program
@@ -300,6 +323,7 @@ namespace SistemaBancario
         static void Main ()
         {
             List<BankAccount> bankAccounts = new List<BankAccount>();
+            List<Person> owners = new List<Person>();
 
             int option = 1;
             while (option != 0)
@@ -314,32 +338,13 @@ namespace SistemaBancario
                     case 1:
                         Console.Clear();
                         Random rdn = new Random();
+                        Person? client;
                         string? userInput;
                         bool isValidInput;
                         int accountNumber;
                         int ownerAge;
                         string? ownerCpf;
                         string? ownerName;
-
-                        //validação nome
-                        do
-                        {
-                            isValidInput = true;
-                            Console.WriteLine("Insira seu nome:");
-                            ownerName = Console.ReadLine();
-                            ownerName = ownerName?.Trim() ?? "";
-                            if (ownerName == "") Console.WriteLine("Seu nome não pode ser nulo! Tente novamente.");
-
-                            foreach (char letter in ownerName)
-                            {
-                                if (!char.IsLetter(letter) && !char.IsWhiteSpace(letter))
-                                {
-                                    Console.WriteLine("Seu nome deve conter apenas letras e espaços! Tente novamente.");
-                                    isValidInput = false;
-                                    break;
-                                }
-                            }
-                        } while (ownerName == "" || !isValidInput);
 
                         //validação cpf
                         do
@@ -364,32 +369,71 @@ namespace SistemaBancario
                                 }
                             }
 
+                            if (!isValidInput) continue;
+
+                            if (ownerCpf.Length != 11)
+                            {
+                                Console.WriteLine("Seu CPF deve conter 11 dígitos! Tente novamente.");
+                                isValidInput = false;
+                            }
+
                         } while (ownerCpf == "" || !isValidInput);
 
-                        //validação idade
-                        do
+                        if (Utils.SearchOwner(owners, ownerCpf) == null)
                         {
-                            Console.WriteLine("Insira sua idade:");
-                            userInput = Console.ReadLine();
-                            isValidInput = int.TryParse(userInput, out ownerAge);
-
-                            if (!isValidInput || ownerAge <= 0) 
+                            //validação nome
+                            do
                             {
-                                Console.WriteLine("Idade inválida");
-                                continue;
-                            }
-                            
-                            if (ownerAge < 18)
-                            {
-                                Console.WriteLine("Você não possui idade suficiente para abrir uma conta!");
-                                isValidInput = false;
-                            } 
-                        } while (!isValidInput || ownerAge <= 0);
+                                isValidInput = true;
+                                Console.WriteLine("Insira seu nome:");
+                                ownerName = Console.ReadLine();
+                                ownerName = ownerName?.Trim() ?? "";
+                                if (ownerName == "") Console.WriteLine("Seu nome não pode ser nulo! Tente novamente.");
 
-                        Person newClient = new Person(ownerAge, ownerCpf, ownerName);
+                                foreach (char letter in ownerName)
+                                {
+                                    if (!char.IsLetter(letter) && !char.IsWhiteSpace(letter))
+                                    {
+                                        Console.WriteLine("Seu nome deve conter apenas letras e espaços! Tente novamente.");
+                                        isValidInput = false;
+                                        break;
+                                    }
+                                }
+                            } while (ownerName == "" || !isValidInput);
+
+                            //validação idade
+                            do
+                            {
+                                Console.WriteLine("Insira sua idade:");
+                                userInput = Console.ReadLine();
+                                isValidInput = int.TryParse(userInput, out ownerAge);
+
+                                if (!isValidInput || ownerAge <= 0)
+                                {
+                                    Console.Clear();
+                                    Console.WriteLine("Idade inválida");
+                                    continue;
+                                }
+
+                                if (ownerAge < 18)
+                                {
+                                    Console.Clear();
+                                    Console.WriteLine("Você não possui idade suficiente para abrir uma conta!");
+                                    isValidInput = false;
+                                }
+                            } while (!isValidInput || ownerAge <= 0);
+
+                            client = new Person(ownerAge, ownerCpf, ownerName);
+                            owners.Add(client);
+                        }
+                        else
+                        {
+                            client = Utils.SearchOwner(owners, ownerCpf);
+                        }
 
                         int typeOption = 1;
-                        while (typeOption != 0)
+                        bool isAccountCreated = false;
+                        while (typeOption != 0 && !isAccountCreated)
                         {
                             typeOption = Menu.AccountType();
                             switch (typeOption)
@@ -400,20 +444,26 @@ namespace SistemaBancario
 
                                 case 1:
                                     Console.Clear();
-                                    accountNumber = rdn.Next(100, 200); // valor ideal: 100000, 20000
-                                    bankAccounts.Add(new CheckingAccount(accountNumber, newClient, 0));
+                                    accountNumber = rdn.Next(100000, 200000);
+                                    bankAccounts.Add(new CheckingAccount(accountNumber, client, 0));
+                                    Console.WriteLine("Sua conta corrente foi criada!");
+                                    isAccountCreated = true;
                                     break;
 
                                 case 2:
                                     Console.Clear();
-                                    accountNumber = rdn.Next(100, 200);
-                                    bankAccounts.Add(new BusinessAccount(accountNumber, newClient, 0));
+                                    accountNumber = rdn.Next(100000, 200000);
+                                    bankAccounts.Add(new BusinessAccount(accountNumber, client, 0));
+                                    Console.WriteLine("Sua conta empresarial foi criada!");
+                                    isAccountCreated = true;
                                     break;
 
                                 case 3:
                                     Console.Clear();
-                                    accountNumber = rdn.Next(100, 200);
-                                    bankAccounts.Add(new SavingAccount(accountNumber, newClient, 0));
+                                    accountNumber = rdn.Next(100000, 200000);
+                                    bankAccounts.Add(new SavingAccount(accountNumber, client, 0));
+                                    Console.WriteLine("Sua conta poupança foi criada!");
+                                    isAccountCreated = true;
                                     break;
 
                                 default:
@@ -425,6 +475,48 @@ namespace SistemaBancario
                         break;
 
                     case 2:
+                        do
+                        {
+                            isValidInput = true;
+                            Console.WriteLine("Insira seu CPF: (Apenas dígitos)");
+                            ownerCpf = Console.ReadLine();
+                            ownerCpf = ownerCpf?.Trim() ?? "";
+                            if (ownerCpf == "")
+                            {
+                                Console.WriteLine("Seu CPF não pode ser nulo! Tente novamente.");
+                                continue;
+                            }
+
+                            foreach (char digit in ownerCpf)
+                            {
+                                if (!char.IsDigit(digit))
+                                {
+                                    Console.WriteLine("Seu CPF deve conter apenas dígitos! Tente novamente.");
+                                    isValidInput = false;
+                                    break;
+                                }
+                            }
+
+                            if (!isValidInput) continue;
+
+                            if (ownerCpf.Length != 11)
+                            {
+                                Console.WriteLine("Seu CPF deve conter 11 dígitos! Tente novamente.");
+                                isValidInput = false;
+                            }
+
+                        } while (ownerCpf == "" || !isValidInput);
+
+                        if (Utils.SearchOwner(owners, ownerCpf) == null)
+                        {
+                            Console.WriteLine("Seu usuário não foi encontrado. Cadastre-se!");
+                            break;
+                        } else
+                        {
+                            client = Utils.SearchOwner(owners, ownerCpf);
+                        }
+
+                            int userOption = Menu.User(client);
 
                         break;
 
