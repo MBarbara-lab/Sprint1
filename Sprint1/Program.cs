@@ -1,4 +1,4 @@
-﻿// tem mudar a política de cálculo de limite loan
+// tem mudar a política de cálculo de limite loan
 // transferência de dinheiro função
 // as operações precisam receber a conta como parâmetro
 // centralizar validações em uma classe
@@ -124,7 +124,7 @@ namespace SistemaBancario
 
             while (option > 0)
             {
-                Console.WriteLine("Selecione o tipo da conta: ");
+                Console.WriteLine("Selecione o tipo da conta que deseja criar: ");
                 Console.WriteLine("1 - Corrente");
                 Console.WriteLine("2 - Empresarial");
                 Console.WriteLine("3 - Poupança");
@@ -392,6 +392,7 @@ namespace SistemaBancario
                             ownerCpf = ownerCpf?.Trim() ?? "";
                             if (ownerCpf == "")
                             {
+                                Console.Clear();
                                 Console.WriteLine("Seu CPF não pode ser nulo! Tente novamente.");
                                 continue;
                             }
@@ -400,6 +401,7 @@ namespace SistemaBancario
                             {
                                 if (!char.IsDigit(digit))
                                 {
+                                    Console.Clear();
                                     Console.WriteLine("Seu CPF deve conter apenas dígitos! Tente novamente.");
                                     isValidInput = false;
                                     break;
@@ -410,6 +412,7 @@ namespace SistemaBancario
 
                             if (ownerCpf.Length != 11)
                             {
+                                Console.Clear();
                                 Console.WriteLine("Seu CPF deve conter 11 dígitos! Tente novamente.");
                                 isValidInput = false;
                             }
@@ -418,6 +421,7 @@ namespace SistemaBancario
 
                         if (Utils.SearchOwner(owners, ownerCpf) == null)
                         {
+                            Console.Clear();
                             //validação nome
                             do
                             {
@@ -425,12 +429,16 @@ namespace SistemaBancario
                                 Console.WriteLine("Insira seu nome:");
                                 ownerName = Console.ReadLine();
                                 ownerName = ownerName?.Trim() ?? "";
-                                if (ownerName == "") Console.WriteLine("Seu nome não pode ser nulo! Tente novamente.");
+                                if (ownerName == "") {
+                                    Console.Clear();
+                                    Console.WriteLine("Seu nome não pode ser nulo! Tente novamente.");
+                                }
 
                                 foreach (char letter in ownerName)
                                 {
                                     if (!char.IsLetter(letter) && !char.IsWhiteSpace(letter))
                                     {
+                                        Console.Clear();
                                         Console.WriteLine("Seu nome deve conter apenas letras e espaços! Tente novamente.");
                                         isValidInput = false;
                                         break;
@@ -438,6 +446,7 @@ namespace SistemaBancario
                                 }
                             } while (ownerName == "" || !isValidInput);
 
+                            Console.Clear();
                             //validação idade
                             do
                             {
@@ -468,6 +477,7 @@ namespace SistemaBancario
                             client = Utils.SearchOwner(owners, ownerCpf);
                         }
 
+                        Console.Clear();
                         int typeOption = 1;
                         bool isAccountCreated = false;
                         while (typeOption != 0 && !isAccountCreated)
@@ -521,6 +531,7 @@ namespace SistemaBancario
                             ownerCpf = ownerCpf?.Trim() ?? "";
                             if (ownerCpf == "")
                             {
+                                Console.Clear();
                                 Console.WriteLine("Seu CPF não pode ser nulo! Tente novamente.");
                                 continue;
                             }
@@ -529,6 +540,7 @@ namespace SistemaBancario
                             {
                                 if (!char.IsDigit(digit))
                                 {
+                                    Console.Clear();
                                     Console.WriteLine("Seu CPF deve conter apenas dígitos! Tente novamente.");
                                     isValidInput = false;
                                     break;
@@ -539,6 +551,7 @@ namespace SistemaBancario
 
                             if (ownerCpf.Length != 11)
                             {
+                                Console.Clear();
                                 Console.WriteLine("Seu CPF deve conter 11 dígitos! Tente novamente.");
                                 isValidInput = false;
                             }
@@ -547,6 +560,7 @@ namespace SistemaBancario
 
                         if (Utils.SearchOwner(owners, ownerCpf) == null)
                         {
+                            Console.Clear();
                             Console.WriteLine("Seu usuário não foi encontrado. Cadastre-se!");
                             break;
                         } else
@@ -627,4 +641,3 @@ namespace SistemaBancario
         }
     }
 }
-
