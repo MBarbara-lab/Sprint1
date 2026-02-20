@@ -1,9 +1,16 @@
-// tem mudar a política de cálculo de limite loan
 // transferência de dinheiro função
 // as operações precisam receber a conta como parâmetro
 // centralizar validações em uma classe
+// empresarial vai passar a receber cnpj (alfanumérico) e pessoa vai passar a possuir cnpj tbm ;)
+// usar construtor primário
 
-// EM PROPGRESSO: TRANSAÇÕES DEPOIUS DE SELECIONAR CONTA
+// funcionalidade de pagar empréstimo. se pagar parcelado, juros cumulativos
+
+// dá p enxugar as validações de enrada, retirando a bool isValidInput
+
+// EM PROPGRESSO:
+// 1. limite de empréstimo baseado na renda mensal informada. poupança e corrente com a mesma renda. empresarial diferente
+// 2. TRANSAÇÕES DEPOIUS DE SELECIONAR CONTA
 
 using System;
 using System.ComponentModel;
@@ -47,10 +54,10 @@ namespace SistemaBancario
             if (person == null) return null;
 
             string? userInput;
-            bool isValidInput;
+            bool isValidInput = false;
             int option = 1;
 
-            while (option > 0)
+            while (option > 0 || !isValidInput)
             {
                 Console.WriteLine("Olá, {0}! Selecione sua conta: ", person.Name);
 
@@ -70,15 +77,18 @@ namespace SistemaBancario
                 
                 userInput = Console.ReadLine();
                 isValidInput = int.TryParse(userInput, out option);
-                if (!isValidInput) option = 1;
-                else if (option >= i || option <= 0)
+
+                if (option >= userAccounts.Count || !isValidInput)
                 {
-                    Console.WriteLine("Selecionou {0} - Conta {1}", option, userAccounts[option - 1].Type);
+                    Console.Clear();
+                    Console.WriteLine("Opção inválida!");
                     isValidInput = false;
+                    option = 1;
                     continue;
                 }
 
-                Console.WriteLine("Selecionou {0} - Conta {1}", i, userAccounts[option-1].Type);
+                Console.WriteLine("Conta selecionada: {0}", )
+                Console.WriteLine("Selecionou {0} - Conta {1}", option, userAccounts[option-1].Type);
                 return userAccounts[option-1];
             }
 
@@ -176,14 +186,15 @@ namespace SistemaBancario
 
     class Person
     {
-        public int Age { get; set; }
-        public string? Cpf { get; set; }
-        public string? Name { get; set; }
-
-        public Person (int age, string? cpf, string? name)
+        public int Age { get; private set; }
+        public string? Cpf { get; private set; }
+        public decimal MonthlyIncome { get; set; }
+        public string? Name { get; private set; }
+        public Person(int age, string? cpf, decimal monthlyIncome, string? name)
         {
             Age = age;
             Cpf = cpf;
+            MonthlyIncome = monthlyIncome;
             Name = name;
         }
     }
@@ -223,11 +234,10 @@ namespace SistemaBancario
         //    }
         //}
 
-        public BankAccount (int number, Person owner, decimal balance)
+        public BankAccount(int number, Person owner)
         {
-            this.Number = number;
-            this.Owner = owner;
-            this.Balance = balance;
+            Number = number;
+            Owner = owner;
         }
 
         public void Loan(decimal value)
@@ -246,8 +256,8 @@ namespace SistemaBancario
 
     class CheckingAccount : BankAccount
     {
-        public CheckingAccount (int number, Person owner, decimal balance) : base(number, owner, balance) {
-            LoanLimit = (balance * 0.3m) + balance;
+        public CheckingAccount (int number, Person owner) : base(number, owner) {
+            LoanLimit = owner.MonthlyIncome * 0.3m;
             Type = "Corrente";
         }
 
@@ -269,9 +279,9 @@ namespace SistemaBancario
 
     class SavingAccount : BankAccount
     {
-        public SavingAccount(int number, Person owner, decimal balance) : base(number, owner, balance)
+        public SavingAccount(int number, Person owner) : base(number, owner)
         {
-            LoanLimit = (balance * 0.3m) + balance;
+            LoanLimit = owner.MonthlyIncome * 0.3m;
             Type = "Poupança";
         }
 
@@ -314,9 +324,9 @@ namespace SistemaBancario
 
     class BusinessAccount : BankAccount
     {
-        public BusinessAccount(int number, Person owner, decimal balance) : base(number, owner, balance)
+        public BusinessAccount(int number, Person owner, decimal monthlyIncome) : base(number, owner)
         {
-            LoanLimit = (balance * 0.5m) + balance;
+            LoanLimit = monthlyIncome * 0.5m;
             Type = "Empresarial";
         }
 
@@ -469,8 +479,24 @@ namespace SistemaBancario
                                 }
                             } while (!isValidInput || ownerAge <= 0);
 
-                            client = new Person(ownerAge, ownerCpf, ownerName);
+                            Console.Clear();
+                            //validação renda mensal
+                            decimal monthlyIncome;
+                            do
+                            {
+                                Console.WriteLine("Insira sua renda mensal (em R$):");
+                                userInput = Console.ReadLine();
+                                isValidInput = decimal.TryParse(userInput, out monthlyIncome);
+
+                                if (!isValidInput || monthlyIncome <= 0) {
+                                    Console.Clear();
+                                    Console.WriteLine("Valor inválido");
+                                }
+                            } while (!isValidInput || monthlyIncome <= 0);
+
+                            client = new Person(ownerAge, ownerCpf, monthlyIncome,ownerName);
                             owners.Add(client);
+
                         }
                         else
                         {
@@ -492,7 +518,7 @@ namespace SistemaBancario
                                 case 1:
                                     Console.Clear();
                                     accountNumber = rdn.Next(100000, 200000);
-                                    bankAccounts.Add(new CheckingAccount(accountNumber, client, 0));
+                                    bankAccounts.Add(new CheckingAccount(accountNumber, client));
                                     Console.WriteLine("Sua conta corrente foi criada!");
                                     isAccountCreated = true;
                                     break;
@@ -500,7 +526,20 @@ namespace SistemaBancario
                                 case 2:
                                     Console.Clear();
                                     accountNumber = rdn.Next(100000, 200000);
-                                    bankAccounts.Add(new BusinessAccount(accountNumber, client, 0));
+                                    
+                                    //validação renda mensal
+                                    decimal monthlyIncome;
+                                    do
+                                    {
+                                        Console.WriteLine("Insira a renda mensal do seu negócio:");
+                                        userInput = Console.ReadLine();
+                                        isValidInput = decimal.TryParse(userInput, out monthlyIncome);
+
+                                        if (!isValidInput || monthlyIncome <= 0) Console.WriteLine("Valor inválido");
+                                    } while (!isValidInput || monthlyIncome <= 0);
+                                    Console.Clear();
+
+                                    bankAccounts.Add(new BusinessAccount(accountNumber, client, monthlyIncome));
                                     Console.WriteLine("Sua conta empresarial foi criada!");
                                     isAccountCreated = true;
                                     break;
@@ -508,7 +547,7 @@ namespace SistemaBancario
                                 case 3:
                                     Console.Clear();
                                     accountNumber = rdn.Next(100000, 200000);
-                                    bankAccounts.Add(new SavingAccount(accountNumber, client, 0));
+                                    bankAccounts.Add(new SavingAccount(accountNumber, client));
                                     Console.WriteLine("Sua conta poupança foi criada!");
                                     isAccountCreated = true;
                                     break;
