@@ -1,360 +1,20 @@
-// tem mudar a política de cálculo de limite loan
 // transferência de dinheiro função
-// as operações precisam receber a conta como parâmetro
 // centralizar validações em uma classe
+// empresarial vai passar a receber cnpj (alfanumérico) e pessoa vai passar a possuir cnpj tbm ;)
+// usar construtor primário
+// refazer a lópgica de saquew, checkin
 
-// EM PROPGRESSO: TRANSAÇÕES DEPOIUS DE SELECIONAR CONTA
+// funcionalidade de pagar empréstimo. se pagar parcelado, juros cumulativos
 
-using System;
-using System.ComponentModel;
-using System.Security.Principal;
+// dá p enxugar as validações de enrada, retirando a bool isValidInput
+
+// EM PROPGRESSO:
+// 1. limite de empréstimo baseado na renda mensal informada. poupança e corrente com a mesma renda. empresarial diferente
+// 2. TRANSAÇÕES DEPOIUS DE SELECIONAR CONTA
+using SistemaBancario.BankAccounts;
 
 namespace SistemaBancario
 {
-    class Menu
-    {
-        public static int Home()
-        {
-            string? userInput;
-            bool isValidInput;
-            int option = 1;
-
-            while (option > 0)
-            {
-                Console.WriteLine("O que deseja fazer?");
-                Console.WriteLine("1 - Criar Conta");
-                Console.WriteLine("2 - Entrar na Conta");
-                Console.WriteLine("3 - Modo DEV");
-                Console.WriteLine("0 - Sair");
-                userInput = Console.ReadLine();
-
-                isValidInput = int.TryParse(userInput, out option);
-
-                if (isValidInput) return option;
-                else
-                {
-                    Console.Clear();
-                    Console.WriteLine("Opção inválida!");
-                    option = 1;                             // caso a conversão falhe, TryParse atribui 0 ao segundo parâmetro
-                } 
-            }
-
-            return 0;
-        }
-        public static BankAccount? UserAccounts(Person person, List<BankAccount> bankAccounts)
-        {
-            List<BankAccount> userAccounts = new List<BankAccount>();
-            if (person == null) return null;
-
-            string? userInput;
-            bool isValidInput;
-            int option = 1;
-
-            while (option > 0)
-            {
-                Console.WriteLine("Olá, {0}! Selecione sua conta: ", person.Name);
-
-                int i = 1;
-                foreach (BankAccount account in bankAccounts)
-                {
-                    if (account.Owner.Cpf == person.Cpf)
-                    {
-                        Console.WriteLine("#{0} - Conta {1}", i, account.Type);
-                        Console.Write("Saldo: {0}", account.Balance);
-                        Console.Write("\tNumero da conta: {0}\n", account.Number);
-                        userAccounts.Add(account);
-                        i++;
-                    }
-                }
-                Console.WriteLine("\n0 - Sair");
-                
-                userInput = Console.ReadLine();
-                isValidInput = int.TryParse(userInput, out option);
-                if (!isValidInput) option = 1;
-                else if (option >= i || option <= 0)
-                {
-                    Console.WriteLine("Selecionou {0} - Conta {1}", option, userAccounts[option - 1].Type);
-                    isValidInput = false;
-                    continue;
-                }
-
-                Console.WriteLine("Selecionou {0} - Conta {1}", i, userAccounts[option-1].Type);
-                return userAccounts[option-1];
-            }
-
-            return null;
-        }
-        public static int Transactions(BankAccount account)
-        {
-            if (account == null) return 0;
-
-            string? userInput;
-            bool isValidInput;
-            int option = 1;
-
-            while (option > 0)
-            {
-                Console.WriteLine("Selecione a transação que deseja realizar: ");
-                Console.WriteLine("1 - Depositar");
-                Console.WriteLine("2 - Empréstimo");
-                Console.WriteLine("3 - Sacar");
-                Console.WriteLine("4 - Transferir");
-                Console.WriteLine("0 - Sair");
-                userInput = Console.ReadLine();
-
-                isValidInput = int.TryParse(userInput, out option);
-
-                if (isValidInput) return option;
-                else
-                {
-                    Console.Clear();
-                    Console.WriteLine("Opção inválida!");
-                    option = 1;
-                }
-            }
-
-            return 0;
-        }
-
-        public static int AccountType()
-        {
-            string? userInput;
-            bool isValidInput;
-            int option = 1;
-
-            while (option > 0)
-            {
-                Console.WriteLine("Selecione o tipo da conta que deseja criar: ");
-                Console.WriteLine("1 - Corrente");
-                Console.WriteLine("2 - Empresarial");
-                Console.WriteLine("3 - Poupança");
-                Console.WriteLine("0 - Sair");
-                userInput = Console.ReadLine();
-
-                isValidInput = int.TryParse(userInput, out option);
-
-                if (isValidInput) return option;
-                else
-                {
-                    Console.Clear();
-                    Console.WriteLine("Opção inválida!");
-                    option = 1;
-                }
-            }
-
-            return 0;
-        }
-
-        public static int DevOptions ()
-        {
-            string? userInput;
-            bool isValidInput;
-            int option = 1;
-
-            while (option > 0)
-            {
-                Console.WriteLine("Selecione o que deseja fazer:");
-                Console.WriteLine("1 - Listar todas as contas");
-                Console.WriteLine("0 - Sair");
-                userInput = Console.ReadLine();
-
-                isValidInput = int.TryParse(userInput, out option);
-
-                if (isValidInput) return option;
-                else
-                {
-                    Console.Clear();
-                    Console.WriteLine("Opção inválida!");
-                    option = 1;
-                }
-            }
-
-            return 0;
-        }
-
-    }
-
-    class Person
-    {
-        public int Age { get; set; }
-        public string? Cpf { get; set; }
-        public string? Name { get; set; }
-
-        public Person (int age, string? cpf, string? name)
-        {
-            Age = age;
-            Cpf = cpf;
-            Name = name;
-        }
-    }
-    abstract class BankAccount {
-        public decimal Balance { get; protected set; } = 0;
-        public decimal LoanLimit { get; protected set; }
-        public decimal Number { get; protected set; }
-        public Person Owner { get; protected set; }
-        public string? Type { get; protected set; }
-
-        abstract public void Withdrawal(decimal amount);
-
-        public void Deposit()
-        {
-            string? userInput;
-            bool isValidInput;
-            decimal depositValue;
-
-            do
-            {
-                Console.WriteLine("Insira o valor do depósito:");
-                userInput = Console.ReadLine();
-                isValidInput = decimal.TryParse(userInput, out depositValue);
-
-                if (!isValidInput || depositValue <= 0) Console.WriteLine("Valor inválido");
-            } while (!isValidInput || depositValue <= 0);    
-
-            Balance += depositValue;
-            Console.WriteLine("Depósito concluído com sucesso! Saldo atual: {0}", Balance);
-        }
-
-        //public void Transfer (BankAccount destination, decimal value)
-        //{
-        //    if (Balance < value)
-        //    {
-                
-        //    }
-        //}
-
-        public BankAccount (int number, Person owner, decimal balance)
-        {
-            this.Number = number;
-            this.Owner = owner;
-            this.Balance = balance;
-        }
-
-        public void Loan(decimal value)
-        {
-            if (value > LoanLimit)
-            {
-                Console.WriteLine("Empréstimo excede o limite!");
-                return;
-            }
-
-            LoanLimit -= value;
-            Balance += value;
-            Console.WriteLine("Empréstimo concedido! Saldo atual: {0}", Balance);
-        }
-    }
-
-    class CheckingAccount : BankAccount
-    {
-        public CheckingAccount (int number, Person owner, decimal balance) : base(number, owner, balance) {
-            LoanLimit = (balance * 0.3m) + balance;
-            Type = "Corrente";
-        }
-
-        private decimal WithdrawalTax { get; set; } = 0.05m;
-
-        public override void Withdrawal (decimal value)
-        {
-            decimal total = (value * WithdrawalTax) + value;
-            if (total > Balance || value >= 0)
-            {
-                Console.WriteLine("Saldo insuficiente!");
-                return;
-            }
-
-            Balance -= total;
-            Console.WriteLine("Transação concluída com sucesso! Saldo atual: {0}", Balance);
-        }
-    }
-
-    class SavingAccount : BankAccount
-    {
-        public SavingAccount(int number, Person owner, decimal balance) : base(number, owner, balance)
-        {
-            LoanLimit = (balance * 0.3m) + balance;
-            Type = "Poupança";
-        }
-
-        private decimal Income { get; set; } = 0.005m;
-
-        public override void Withdrawal (decimal value)
-        {
-            if (value > Balance)
-            {
-                Console.WriteLine("Saldo insuficiente!");
-                return;
-            }
-
-            Balance -= value;
-            Console.WriteLine("Transação concluída com sucesso! Saldo atual: {0}", Balance);
-        }
-
-        public void IncomeForecast()
-        {
-            string? userInput;
-            bool isValidInput;
-            int range; 
-            decimal amount;
-
-            do
-            {
-                Console.WriteLine("Defina o alcance da sua previsão, em meses: ");
-                userInput = Console.ReadLine();
-                isValidInput = int.TryParse(userInput, out range);
-
-                if(!isValidInput || range < 1) Console.WriteLine("Alcance inválido!");
-            } while (!isValidInput || range < 1);
-
-            amount = Balance;
-            for (int i = range; i > 0; i--) amount *= (1 + Income);
-
-            Console.WriteLine("Em {0} meses, seu saldo será de {1:n2}", range, amount);
-        }
-    }
-
-    class BusinessAccount : BankAccount
-    {
-        public BusinessAccount(int number, Person owner, decimal balance) : base(number, owner, balance)
-        {
-            LoanLimit = (balance * 0.5m) + balance;
-            Type = "Empresarial";
-        }
-
-        public override void Withdrawal (decimal value)
-        {
-            if (value > Balance)
-            {
-                Console.WriteLine("Saldo insuficiente!");
-                return;
-            }
-
-            Balance -= value;
-            Console.WriteLine("Transação concluída com sucesso! Saldo atual: {0}", Balance);
-        }
-    }
-
-    class Utils
-    {
-        public static void PrintAccounts<T>(List<T>list) where T : BankAccount {
-            foreach (T account in list)
-            {
-                Console.WriteLine("Titular {0}", account.Owner.Name);
-                Console.WriteLine(" Tipo:  {0}", account.Type);
-                Console.WriteLine(" Conta: {0}", account.Number);
-                Console.WriteLine(" Saldo: R$ {0:n2}", account.Balance);
-            }
-        }
-
-        public static Person? SearchOwner<T>(List<T> owners, string searchedValue) where T : Person
-        {
-            foreach (T person in owners)
-            {
-                if (person.Cpf == searchedValue) return person;
-            }
-            return null;
-        }
-    }
-
     class Program
     {
         static void Main ()
@@ -469,8 +129,24 @@ namespace SistemaBancario
                                 }
                             } while (!isValidInput || ownerAge <= 0);
 
-                            client = new Person(ownerAge, ownerCpf, ownerName);
+                            Console.Clear();
+                            //validação renda mensal
+                            decimal monthlyIncome;
+                            do
+                            {
+                                Console.WriteLine("Insira sua renda mensal (em R$):");
+                                userInput = Console.ReadLine();
+                                isValidInput = decimal.TryParse(userInput, out monthlyIncome);
+
+                                if (!isValidInput || monthlyIncome <= 0) {
+                                    Console.Clear();
+                                    Console.WriteLine("Valor inválido");
+                                }
+                            } while (!isValidInput || monthlyIncome <= 0);
+
+                            client = new Person(ownerAge, ownerCpf, monthlyIncome, ownerName);
                             owners.Add(client);
+
                         }
                         else
                         {
@@ -492,7 +168,7 @@ namespace SistemaBancario
                                 case 1:
                                     Console.Clear();
                                     accountNumber = rdn.Next(100000, 200000);
-                                    bankAccounts.Add(new CheckingAccount(accountNumber, client, 0));
+                                    bankAccounts.Add(new Checking(accountNumber, client));
                                     Console.WriteLine("Sua conta corrente foi criada!");
                                     isAccountCreated = true;
                                     break;
@@ -500,7 +176,20 @@ namespace SistemaBancario
                                 case 2:
                                     Console.Clear();
                                     accountNumber = rdn.Next(100000, 200000);
-                                    bankAccounts.Add(new BusinessAccount(accountNumber, client, 0));
+                                    
+                                    //validação renda mensal
+                                    decimal monthlyIncome;
+                                    do
+                                    {
+                                        Console.WriteLine("Insira a renda mensal do seu negócio:");
+                                        userInput = Console.ReadLine();
+                                        isValidInput = decimal.TryParse(userInput, out monthlyIncome);
+
+                                        if (!isValidInput || monthlyIncome <= 0) Console.WriteLine("Valor inválido");
+                                    } while (!isValidInput || monthlyIncome <= 0);
+                                    Console.Clear();
+
+                                    bankAccounts.Add(new Business(accountNumber, client, monthlyIncome));
                                     Console.WriteLine("Sua conta empresarial foi criada!");
                                     isAccountCreated = true;
                                     break;
@@ -508,7 +197,7 @@ namespace SistemaBancario
                                 case 3:
                                     Console.Clear();
                                     accountNumber = rdn.Next(100000, 200000);
-                                    bankAccounts.Add(new SavingAccount(accountNumber, client, 0));
+                                    bankAccounts.Add(new Saving(accountNumber, client));
                                     Console.WriteLine("Sua conta poupança foi criada!");
                                     isAccountCreated = true;
                                     break;
