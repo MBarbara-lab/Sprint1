@@ -3,14 +3,15 @@
 // empresarial vai passar a receber cnpj (alfanumérico) e pessoa vai passar a possuir cnpj tbm ;)
 // usar construtor primário
 // refazer a lópgica de saquew, checkin
+// 2. TRANSAÇÕES DEPOIUS DE SELECIONAR CONTA
 
 // funcionalidade de pagar empréstimo. se pagar parcelado, juros cumulativos
 
 // dá p enxugar as validações de enrada, retirando a bool isValidInput
 
 // EM PROPGRESSO:
-// 1. limite de empréstimo baseado na renda mensal informada. poupança e corrente com a mesma renda. empresarial diferente
-// 2. TRANSAÇÕES DEPOIUS DE SELECIONAR CONTA
+// menu de criar conta
+
 using SistemaBancario.BankAccounts;
 
 namespace SistemaBancario
@@ -36,121 +37,30 @@ namespace SistemaBancario
                         Console.Clear();
                         Random rdn = new Random();
                         Person? client;
-                        string? userInput;
-                        bool isValidInput;
-                        int accountNumber;
-                        int ownerAge;
-                        string? ownerCpf;
-                        string? ownerName;
 
-                        //validação cpf
-                        do
-                        {
-                            isValidInput = true;
-                            Console.WriteLine("Insira seu CPF: (Apenas dígitos)");
-                            ownerCpf = Console.ReadLine();
-                            ownerCpf = ownerCpf?.Trim() ?? "";
-                            if (ownerCpf == "")
-                            {
-                                Console.Clear();
-                                Console.WriteLine("Seu CPF não pode ser nulo! Tente novamente.");
-                                continue;
-                            }
+                        int accountNumber, ownerAge;
 
-                            foreach (char digit in ownerCpf)
-                            {
-                                if (!char.IsDigit(digit))
-                                {
-                                    Console.Clear();
-                                    Console.WriteLine("Seu CPF deve conter apenas dígitos! Tente novamente.");
-                                    isValidInput = false;
-                                    break;
-                                }
-                            }
-
-                            if (!isValidInput) continue;
-
-                            if (ownerCpf.Length != 11)
-                            {
-                                Console.Clear();
-                                Console.WriteLine("Seu CPF deve conter 11 dígitos! Tente novamente.");
-                                isValidInput = false;
-                            }
-
-                        } while (ownerCpf == "" || !isValidInput);
+                        string? ownerCpf = Validation.Cpf();
+                        if (ownerCpf == null) break;
 
                         if (Utils.SearchOwner(owners, ownerCpf) == null)
                         {
                             Console.Clear();
-                            //validação nome
-                            do
-                            {
-                                isValidInput = true;
-                                Console.WriteLine("Insira seu nome:");
-                                ownerName = Console.ReadLine();
-                                ownerName = ownerName?.Trim() ?? "";
-                                if (ownerName == "") {
-                                    Console.Clear();
-                                    Console.WriteLine("Seu nome não pode ser nulo! Tente novamente.");
-                                }
-
-                                foreach (char letter in ownerName)
-                                {
-                                    if (!char.IsLetter(letter) && !char.IsWhiteSpace(letter))
-                                    {
-                                        Console.Clear();
-                                        Console.WriteLine("Seu nome deve conter apenas letras e espaços! Tente novamente.");
-                                        isValidInput = false;
-                                        break;
-                                    }
-                                }
-                            } while (ownerName == "" || !isValidInput);
+                            string? ownerName = Validation.Name();
 
                             Console.Clear();
-                            //validação idade
-                            do
-                            {
-                                Console.WriteLine("Insira sua idade:");
-                                userInput = Console.ReadLine();
-                                isValidInput = int.TryParse(userInput, out ownerAge);
-
-                                if (!isValidInput || ownerAge <= 0)
-                                {
-                                    Console.Clear();
-                                    Console.WriteLine("Idade inválida");
-                                    continue;
-                                }
-
-                                if (ownerAge < 18)
-                                {
-                                    Console.Clear();
-                                    Console.WriteLine("Você não possui idade suficiente para abrir uma conta!");
-                                    isValidInput = false;
-                                }
-                            } while (!isValidInput || ownerAge <= 0);
+                            ownerAge = Validation.Age();
 
                             Console.Clear();
-                            //validação renda mensal
-                            decimal monthlyIncome;
-                            do
-                            {
-                                Console.WriteLine("Insira sua renda mensal (em R$):");
-                                userInput = Console.ReadLine();
-                                isValidInput = decimal.TryParse(userInput, out monthlyIncome);
+                            decimal ownerMonthlyIncome = Validation.MonthlyIncome("Insira a sua renda mensal: ");
 
-                                if (!isValidInput || monthlyIncome <= 0) {
-                                    Console.Clear();
-                                    Console.WriteLine("Valor inválido");
-                                }
-                            } while (!isValidInput || monthlyIncome <= 0);
-
-                            client = new Person(ownerAge, ownerCpf, monthlyIncome, ownerName);
+                            client = new Person(ownerAge, ownerCpf, ownerMonthlyIncome, ownerName);
                             owners.Add(client);
-
                         }
                         else
                         {
                             client = Utils.SearchOwner(owners, ownerCpf);
+                            if (client == null) break; 
                         }
 
                         Console.Clear();
@@ -168,6 +78,7 @@ namespace SistemaBancario
                                 case 1:
                                     Console.Clear();
                                     accountNumber = rdn.Next(100000, 200000);
+
                                     bankAccounts.Add(new Checking(accountNumber, client));
                                     Console.WriteLine("Sua conta corrente foi criada!");
                                     isAccountCreated = true;
@@ -176,20 +87,11 @@ namespace SistemaBancario
                                 case 2:
                                     Console.Clear();
                                     accountNumber = rdn.Next(100000, 200000);
-                                    
-                                    //validação renda mensal
-                                    decimal monthlyIncome;
-                                    do
-                                    {
-                                        Console.WriteLine("Insira a renda mensal do seu negócio:");
-                                        userInput = Console.ReadLine();
-                                        isValidInput = decimal.TryParse(userInput, out monthlyIncome);
 
-                                        if (!isValidInput || monthlyIncome <= 0) Console.WriteLine("Valor inválido");
-                                    } while (!isValidInput || monthlyIncome <= 0);
+                                    decimal businessMonthlyIncome = Validation.MonthlyIncome("Insira a renda mensal do seu negócio: ");
+
                                     Console.Clear();
-
-                                    bankAccounts.Add(new Business(accountNumber, client, monthlyIncome));
+                                    bankAccounts.Add(new Business(accountNumber, client, businessMonthlyIncome));
                                     Console.WriteLine("Sua conta empresarial foi criada!");
                                     isAccountCreated = true;
                                     break;
@@ -197,6 +99,7 @@ namespace SistemaBancario
                                 case 3:
                                     Console.Clear();
                                     accountNumber = rdn.Next(100000, 200000);
+
                                     bankAccounts.Add(new Saving(accountNumber, client));
                                     Console.WriteLine("Sua conta poupança foi criada!");
                                     isAccountCreated = true;
@@ -211,41 +114,9 @@ namespace SistemaBancario
                         break;
 
                     case 2:
-                        do
-                        {
-                            isValidInput = true;
-                            Console.Clear();
-                            Console.WriteLine("Insira seu CPF: (Apenas dígitos)");
-                            ownerCpf = Console.ReadLine();
-                            ownerCpf = ownerCpf?.Trim() ?? "";
-                            if (ownerCpf == "")
-                            {
-                                Console.Clear();
-                                Console.WriteLine("Seu CPF não pode ser nulo! Tente novamente.");
-                                continue;
-                            }
-
-                            foreach (char digit in ownerCpf)
-                            {
-                                if (!char.IsDigit(digit))
-                                {
-                                    Console.Clear();
-                                    Console.WriteLine("Seu CPF deve conter apenas dígitos! Tente novamente.");
-                                    isValidInput = false;
-                                    break;
-                                }
-                            }
-
-                            if (!isValidInput) continue;
-
-                            if (ownerCpf.Length != 11)
-                            {
-                                Console.Clear();
-                                Console.WriteLine("Seu CPF deve conter 11 dígitos! Tente novamente.");
-                                isValidInput = false;
-                            }
-
-                        } while (ownerCpf == "" || !isValidInput);
+                        Console.Clear();
+                        ownerCpf = Validation.Cpf();
+                        if (ownerCpf == null) break;
 
                         if (Utils.SearchOwner(owners, ownerCpf) == null)
                         {
@@ -255,8 +126,12 @@ namespace SistemaBancario
                         } else
                         {
                             client = Utils.SearchOwner(owners, ownerCpf);
+                            if (client == null) break;
                         }
+                        
+                        Console.Clear();
                         BankAccount? currentAccount = Menu.UserAccounts(client, bankAccounts);
+                        if (currentAccount == null) break;
 
                         int transactionOption = 1;
                         while (transactionOption != 0)

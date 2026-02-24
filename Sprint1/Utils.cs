@@ -1,5 +1,4 @@
-﻿using System;
-using SistemaBancario.BankAccounts;
+﻿using SistemaBancario.BankAccounts;
 
 namespace SistemaBancario
 {

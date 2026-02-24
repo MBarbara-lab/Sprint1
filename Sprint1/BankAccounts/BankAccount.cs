@@ -1,6 +1,4 @@
-﻿using SistemaBancario;
-
-namespace SistemaBancario.BankAccounts
+﻿namespace SistemaBancario.BankAccounts
 {
     public abstract class BankAccount
     {

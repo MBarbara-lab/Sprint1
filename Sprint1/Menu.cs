@@ -1,5 +1,4 @@
-﻿using System;
-using SistemaBancario.BankAccounts;
+﻿using SistemaBancario.BankAccounts;
 
 namespace SistemaBancario
 {
@@ -33,6 +32,7 @@ namespace SistemaBancario
 
             return 0;
         }
+
         public static BankAccount? UserAccounts(Person person, List<BankAccount> bankAccounts)
         {
             List<BankAccount> userAccounts = new List<BankAccount>();
@@ -51,7 +51,7 @@ namespace SistemaBancario
                 {
                     if (account.Owner.Cpf == person.Cpf)
                     {
-                        Console.WriteLine("#{0} - Conta {1}", i, account.Type);
+                        Console.WriteLine("\n#{0} - Conta {1}", i, account.Type);
                         Console.Write("Saldo: {0}", account.Balance);
                         Console.Write("\tNumero da conta: {0}\n", account.Number);
                         userAccounts.Add(account);
@@ -64,7 +64,7 @@ namespace SistemaBancario
                 isValidInput = int.TryParse(userInput, out option);
 
                 Console.Clear();
-                if (option >= userAccounts.Count || !isValidInput)
+                if (option < 0 || option > userAccounts.Count || !isValidInput)
                 {
                     Console.Clear();
                     Console.WriteLine("Opção inválida!");
@@ -73,13 +73,17 @@ namespace SistemaBancario
                     continue;
                 }
 
-                Console.WriteLine("Conta {0} selecionada", userAccounts[option - 1].Type);
-                Console.WriteLine("Número: {0} \t Saldo: {1:n2}", userAccounts[option - 1].Number, userAccounts[option - 1].Balance);
-                return userAccounts[option - 1];
+                if (option != 0)
+                {
+                    Console.WriteLine("Conta {0} selecionada", userAccounts[option - 1].Type);
+                    Console.WriteLine("Número: {0} \t Saldo: {1:n2}", userAccounts[option - 1].Number, userAccounts[option - 1].Balance);
+                    return userAccounts[option - 1];
+                }
             }
 
             return null;
         }
+        
         public static int Transactions(BankAccount account)
         {
             if (account == null) return 0;
