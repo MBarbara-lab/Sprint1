@@ -4,11 +4,26 @@ namespace SistemaBancario
 {
     class Menu
     {
+        //public static int Start()
+        //{
+        //    int option = 1;
+
+        //    while (option > 0)
+        //    {
+        //        Console.WriteLine("Boas vindas ao EventHorizon Bank!\n");
+
+        //        Console.WriteLine("Selecione uma opção:");
+        //        Console.WriteLine("\t1 - Criar Conta");
+        //        Console.WriteLine("\t2 - Modo DEV");
+
+        //        option = Validation.Option();
+        //    }
+        //}
+
         public static int Home()
         {
-            string? userInput;
-            bool isValidInput;
             int option = 1;
+            bool isValidInput = false;
 
             while (option > 0)
             {
@@ -17,17 +32,21 @@ namespace SistemaBancario
                 Console.WriteLine("2 - Entrar na Conta");
                 Console.WriteLine("3 - Modo DEV");
                 Console.WriteLine("0 - Sair");
-                userInput = Console.ReadLine();
 
-                isValidInput = int.TryParse(userInput, out option);
+                isValidInput = Validation.Option().Key;
+                option = Validation.Option().Value;
 
                 if (isValidInput) return option;
-                else
-                {
-                    Console.Clear();
-                    Console.WriteLine("Opção inválida!");
-                    option = 1;                             // caso a conversão falhe, TryParse atribui 0 ao segundo parâmetro
-                }
+
+                //bool isValidInput = int.TryParse(Console.ReadLine(), out option);
+                //if (!isValidInput || option < 0)
+                //{
+                //    Console.Clear();
+                //    Console.WriteLine("Opção inválida!");
+                //    option = 1;                             // caso a conversão falhe, TryParse atribui 0 ao segundo parâmetro
+                //    continue;
+                //}
+                //return option;
             }
 
             return 0;
@@ -38,11 +57,10 @@ namespace SistemaBancario
             List<BankAccount> userAccounts = new List<BankAccount>();
             if (person == null) return null;
 
-            string? userInput;
             bool isValidInput = false;
             int option = 1;
 
-            while (option > 0 || !isValidInput)
+            while (!isValidInput)
             {
                 Console.WriteLine("Olá, {0}! Selecione sua conta: ", person.Name);
 
@@ -60,11 +78,8 @@ namespace SistemaBancario
                 }
                 Console.WriteLine("\n0 - Sair");
 
-                userInput = Console.ReadLine();
-                isValidInput = int.TryParse(userInput, out option);
-
-                Console.Clear();
-                if (option < 0 || option > userAccounts.Count || !isValidInput)
+                isValidInput = int.TryParse(Console.ReadLine(), out option);
+                if (option <= 0 || option > userAccounts.Count || !isValidInput)
                 {
                     Console.Clear();
                     Console.WriteLine("Opção inválida!");
@@ -73,12 +88,9 @@ namespace SistemaBancario
                     continue;
                 }
 
-                if (option != 0)
-                {
-                    Console.WriteLine("Conta {0} selecionada", userAccounts[option - 1].Type);
-                    Console.WriteLine("Número: {0} \t Saldo: {1:n2}", userAccounts[option - 1].Number, userAccounts[option - 1].Balance);
-                    return userAccounts[option - 1];
-                }
+                Console.WriteLine("Conta {0} selecionada", userAccounts[option - 1].Type);
+                Console.WriteLine("Número: {0} \t Saldo: {1:n2}", userAccounts[option - 1].Number, userAccounts[option - 1].Balance);
+                return userAccounts[option - 1];
             }
 
             return null;
@@ -88,8 +100,6 @@ namespace SistemaBancario
         {
             if (account == null) return 0;
 
-            string? userInput;
-            bool isValidInput;
             int option = 1;
 
             while (option > 0)
@@ -100,16 +110,14 @@ namespace SistemaBancario
                 Console.WriteLine("3 - Sacar");
                 Console.WriteLine("4 - Transferir");
                 Console.WriteLine("0 - Sair");
-                userInput = Console.ReadLine();
 
-                isValidInput = int.TryParse(userInput, out option);
-
-                if (isValidInput) return option;
-                else
+                bool isValidInput = int.TryParse(Console.ReadLine(), out option);
+                if (!isValidInput || option < 0)
                 {
                     Console.Clear();
                     Console.WriteLine("Opção inválida!");
-                    option = 1;
+                    option = 1;                             
+                    continue;
                 }
             }
 
@@ -118,8 +126,6 @@ namespace SistemaBancario
 
         public static int AccountType()
         {
-            string? userInput;
-            bool isValidInput;
             int option = 1;
 
             while (option > 0)
@@ -129,16 +135,14 @@ namespace SistemaBancario
                 Console.WriteLine("2 - Empresarial");
                 Console.WriteLine("3 - Poupança");
                 Console.WriteLine("0 - Sair");
-                userInput = Console.ReadLine();
 
-                isValidInput = int.TryParse(userInput, out option);
-
-                if (isValidInput) return option;
-                else
+                bool isValidInput = int.TryParse(Console.ReadLine(), out option);
+                if (!isValidInput || option < 0)
                 {
                     Console.Clear();
                     Console.WriteLine("Opção inválida!");
                     option = 1;
+                    continue;
                 }
             }
 
@@ -147,8 +151,6 @@ namespace SistemaBancario
 
         public static int DevOptions()
         {
-            string? userInput;
-            bool isValidInput;
             int option = 1;
 
             while (option > 0)
@@ -156,16 +158,14 @@ namespace SistemaBancario
                 Console.WriteLine("Selecione o que deseja fazer:");
                 Console.WriteLine("1 - Listar todas as contas");
                 Console.WriteLine("0 - Sair");
-                userInput = Console.ReadLine();
 
-                isValidInput = int.TryParse(userInput, out option);
-
-                if (isValidInput) return option;
-                else
+                bool isValidInput = int.TryParse(Console.ReadLine(), out option);
+                if (!isValidInput || option < 0)
                 {
                     Console.Clear();
                     Console.WriteLine("Opção inválida!");
                     option = 1;
+                    continue;
                 }
             }
 

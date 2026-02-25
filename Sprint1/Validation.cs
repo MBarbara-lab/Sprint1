@@ -1,4 +1,6 @@
-﻿namespace SistemaBancario
+﻿using Microsoft.VisualBasic.FileIO;
+
+namespace SistemaBancario
 {
     internal class Validation
     {
@@ -31,7 +33,7 @@
 
             return age;
         }
-        
+
         static public string? Cpf()
         {
             bool isValidInput;
@@ -73,7 +75,7 @@
 
             return cpf;
         }
-        
+
         static public decimal MonthlyIncome(string texto)
         {
             bool isValidInput;
@@ -125,6 +127,27 @@
             } while (name == "" || !isValidInput);
 
             return name;
+        }
+
+        static public KeyValuePair<bool, int> Option()
+        {
+            bool isValidInput = int.TryParse(Console.ReadLine(), out int option);
+            
+            if (!isValidInput)
+            {
+                Console.Clear();
+                Console.WriteLine("Apenas dígitos são aceitos. Tente novamente.");
+                option = 1;                            // caso a conversão falhe, TryParse atribui 0 ao segundo parâmetro
+            }
+            
+            if (option < 0)
+            {
+                Console.Clear();
+                Console.WriteLine("Opção inválida!");
+                option = 1;
+                isValidInput = false;
+            }
+            return new KeyValuePair<bool, int> (isValidInput, option);
         }
     }
 }

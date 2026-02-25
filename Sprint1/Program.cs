@@ -1,16 +1,23 @@
-// transferência de dinheiro função
-// centralizar validações em uma classe
-// empresarial vai passar a receber cnpj (alfanumérico) e pessoa vai passar a possuir cnpj tbm ;)
-// usar construtor primário
-// refazer a lópgica de saquew, checkin
-// 2. TRANSAÇÕES DEPOIUS DE SELECIONAR CONTA
+// ===============================================================================================================================================
+// EXTRA:
+// -> Empresarial vai passar a receber cnpj (alfanumérico) e pessoa vai passar a possuir cnpj tbm ;)
+// -> Usar construtor primário
 
-// funcionalidade de pagar empréstimo. se pagar parcelado, juros cumulativos
-
-// dá p enxugar as validações de enrada, retirando a bool isValidInput
+// PENDENTES:
+// - Função Transferir
+// - Transações após selecionar conta
+// - Pagar empréstimo. Se pagar parcelado, juros cumulativos
+// - Enxugar as validações de entrada, retirando a bool isValidInput
+// - UI nos textos: https://gemini.google.com/app/a9e3bd3d2f67f91b?hl=pt-BR
 
 // EM PROPGRESSO:
-// menu de criar conta
+// - Menu de criar conta
+
+
+// ERRO: menu tá precisando de duas entrads??????
+
+// ===============================================================================================================================================
+
 
 using SistemaBancario.BankAccounts;
 
@@ -27,6 +34,9 @@ namespace SistemaBancario
             while (option != 0)
             {
                 option = Menu.Home();
+
+                Console.WriteLine("\t\t->{0}", option);
+
                 switch (option)
                 {
                     case 0: 
@@ -34,7 +44,7 @@ namespace SistemaBancario
                         break;
 
                     case 1:
-                        Console.Clear();
+                        //Console.Clear();
                         Random rdn = new Random();
                         Person? client;
 
