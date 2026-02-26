@@ -13,14 +13,50 @@
         public void Deposit()
         {
             string? userInput;
-            bool isValidInput;
+            bool isValidInput = true;
             decimal depositValue;
 
             do
             {
                 Console.WriteLine("Insira o valor do depósito:");
+                userInput = Console.ReadLine();
 
-                isValidInput = decimal.TryParse(Console.ReadLine(), out depositValue);
+                userInput = userInput.Trim();
+
+                if (userInput == "")
+                {
+                    Console.Clear();
+                    Console.WriteLine("O valor não deve ser nulo!");
+                    continue;
+                }
+
+                foreach (char digit in userInput)
+                {
+                    int commaQtd = 0;
+
+                    if (!char.IsDigit(digit))
+                    {
+                        if (digit == ',')
+                        {
+                            commaQtd++;
+                            isValidInput = commaQtd > 1 ? false : true;
+                        }
+
+                        if (digit == '.')
+                        {
+                            //digit = ',';
+                            commaQtd++;
+                            isValidInput = commaQtd > 1 ? false : true;
+                        }
+
+                        if (!isValidInput)
+                        {
+                            Console.WriteLine("O modelo aceito é: 40,");
+                        }
+                    }
+                }
+
+                isValidInput = decimal.TryParse(userInput, out depositValue);
 
                 if (!isValidInput || depositValue <= 0)
                 {

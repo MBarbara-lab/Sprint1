@@ -29,9 +29,9 @@ namespace SistemaBancario
             List<BankAccount> bankAccounts = new List<BankAccount>();
             List<Person> owners = new List<Person>();
 
-            //Person pessoa = new Person(40, "12345678901", 2000, "OII");
-            //Checking conta = new Checking(3456, pessoa);
-            //conta.Deposit();
+            Person pessoa = new Person(40, "12345678901", 2000, "OII");
+            Checking conta = new Checking(3456, pessoa);
+            conta.Deposit();
 
             int option = 1;
             while (option != 0)

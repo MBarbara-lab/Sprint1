@@ -150,5 +150,57 @@ namespace SistemaBancario
 
             return (isValidInput, option);
         }
+
+        static public (bool, decimal) Amount (string text)
+        {
+            string? userInput;
+            bool isValidInput;
+            decimal amount = 0;
+
+            do
+            {
+                isValidInput = true;
+
+                Console.WriteLine("{0}", text);
+                userInput = Console.ReadLine();
+
+                userInput = userInput.Trim();
+
+                if (userInput == "")
+                {
+                    Console.Clear();
+                    Console.WriteLine("O valor não deve ser nulo!");
+                    continue;
+                }
+
+                userInput = userInput.Replace('.', ',');
+
+                foreach (char digit in userInput)
+                {
+                    int commaQtd = 0;
+
+                    if (!char.IsDigit(digit))
+                    {
+                        if (digit == ',' && commaQtd == 0) commaQtd++;
+                        else
+                        {
+                            Console.Clear();
+                            isValidInput = false;
+                            Console.WriteLine("Por favor, digite um valor válido! Ex: 40,77 ou 23.54");
+                            break;
+                        }
+                    }
+                }
+                if (!isValidInput) continue;
+
+                isValidInput = decimal.TryParse(userInput, out amount);
+
+                if (!isValidInput || amount <= 0)
+                {
+                    Console.Clear();
+                    Console.WriteLine("Valor inválido! Modelo aceito: 13,32 ou 6.88");
+                }
+            } while (!isValidInput || amount <= 0);
+        }
     }
 }
