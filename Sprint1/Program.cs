@@ -9,12 +9,11 @@
 // - Pagar empréstimo. Se pagar parcelado, juros cumulativos
 // - Enxugar as validações de entrada, retirando a bool isValidInput
 // - UI nos textos: https://gemini.google.com/app/a9e3bd3d2f67f91b?hl=pt-BR
+// - Deletar o código de Validation
+// - Melhorar o Controller
 
 // EM PROPGRESSO:
 // - Menu de criar conta
-
-
-// ERRO: menu tá precisando de duas entrads??????
 
 // ===============================================================================================================================================
 
@@ -25,17 +24,19 @@ namespace SistemaBancario
 {
     class Program
     {
-        static void Main ()
+        static void Main()
         {
             List<BankAccount> bankAccounts = new List<BankAccount>();
             List<Person> owners = new List<Person>();
+
+            //Person pessoa = new Person(40, "12345678901", 2000, "OII");
+            //Checking conta = new Checking(3456, pessoa);
+            //conta.Deposit();
 
             int option = 1;
             while (option != 0)
             {
                 option = Menu.Home();
-
-                Console.WriteLine("\t\t->{0}", option);
 
                 switch (option)
                 {
@@ -44,11 +45,11 @@ namespace SistemaBancario
                         break;
 
                     case 1:
-                        //Console.Clear();
+                        Console.Clear();
                         Random rdn = new Random();
                         Person? client;
 
-                        int accountNumber, ownerAge;
+                        int ownerAge;
 
                         string? ownerCpf = Validation.Cpf();
                         if (ownerCpf == null) break;
@@ -74,53 +75,7 @@ namespace SistemaBancario
                         }
 
                         Console.Clear();
-                        int typeOption = 1;
-                        bool isAccountCreated = false;
-                        while (typeOption != 0 && !isAccountCreated)
-                        {
-                            typeOption = Menu.AccountType();
-                            switch (typeOption)
-                            {
-                                case 0: 
-                                    Console.Clear();
-                                    break;
-
-                                case 1:
-                                    Console.Clear();
-                                    accountNumber = rdn.Next(100000, 200000);
-
-                                    bankAccounts.Add(new Checking(accountNumber, client));
-                                    Console.WriteLine("Sua conta corrente foi criada!");
-                                    isAccountCreated = true;
-                                    break;
-
-                                case 2:
-                                    Console.Clear();
-                                    accountNumber = rdn.Next(100000, 200000);
-
-                                    decimal businessMonthlyIncome = Validation.MonthlyIncome("Insira a renda mensal do seu negócio: ");
-
-                                    Console.Clear();
-                                    bankAccounts.Add(new Business(accountNumber, client, businessMonthlyIncome));
-                                    Console.WriteLine("Sua conta empresarial foi criada!");
-                                    isAccountCreated = true;
-                                    break;
-
-                                case 3:
-                                    Console.Clear();
-                                    accountNumber = rdn.Next(100000, 200000);
-
-                                    bankAccounts.Add(new Saving(accountNumber, client));
-                                    Console.WriteLine("Sua conta poupança foi criada!");
-                                    isAccountCreated = true;
-                                    break;
-
-                                default:
-                                    Console.Clear();
-                                    Console.WriteLine("Opção inválida! Tente novamente.");
-                                    break;
-                            }
-                        }
+                        Controller.AccountType(client, bankAccounts);
                         break;
 
                     case 2:
@@ -143,37 +98,37 @@ namespace SistemaBancario
                         BankAccount? currentAccount = Menu.UserAccounts(client, bankAccounts);
                         if (currentAccount == null) break;
 
-                        int transactionOption = 1;
-                        while (transactionOption != 0)
-                        {
-                            transactionOption = Menu.Transactions(currentAccount);
-                            switch (option)
-                            {
-                                case 0:
-                                    Console.Clear();
-                                    break;
+                        //int transactionOption = 1;
+                        //while (transactionOption != 0)
+                        //{
+                        //    transactionOption = Menu.Transactions(currentAccount);
+                        //    switch (option)
+                        //    {
+                        //        case 0:
+                        //            Console.Clear();
+                        //            break;
 
-                                case 1:
-                                    Console.Clear();
-                                    Console.WriteLine("Op1");
-                                    break;
+                        //        case 1:
+                        //            Console.Clear();
+                        //            Console.WriteLine("Op1");
+                        //            break;
 
-                                case 2:
-                                    Console.Clear();
-                                    Console.WriteLine("Op2");
-                                    break;
+                        //        case 2:
+                        //            Console.Clear();
+                        //            Console.WriteLine("Op2");
+                        //            break;
 
-                                case 3:
-                                    Console.Clear();
-                                    Console.WriteLine("Op3");
-                                    break;
+                        //        case 3:
+                        //            Console.Clear();
+                        //            Console.WriteLine("Op3");
+                        //            break;
 
-                                default:
-                                    Console.Clear();
-                                    Console.WriteLine("Opção inválida! Tente novamente.");
-                                    break;
-                            }
-                        }
+                        //        default:
+                        //            Console.Clear();
+                        //            Console.WriteLine("Opção inválida! Tente novamente.");
+                        //            break;
+                        //    }
+                        //}
                         break;
 
                     case 3:

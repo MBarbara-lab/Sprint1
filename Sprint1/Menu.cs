@@ -6,26 +6,48 @@ namespace SistemaBancario
     {
         //public static int Start()
         //{
-        //    int option = 1;
+        //    var validation = (result: false, option: 1);
 
-        //    while (option > 0)
+        //    while (validation.option > 0)
         //    {
         //        Console.WriteLine("Boas vindas ao EventHorizon Bank!\n");
 
         //        Console.WriteLine("Selecione uma opção:");
-        //        Console.WriteLine("\t1 - Criar Conta");
-        //        Console.WriteLine("\t2 - Modo DEV");
+        //        Console.WriteLine("1 - Cadastre-se");
+        //        Console.WriteLine("2 - Entrar");
+        //        Console.WriteLine("3 - Modo DEV");
+        //        Console.WriteLine("0 - Sair");
 
-        //        option = Validation.Option();
+        //        validation = Validation.Option();
+
+        //        if (validation.result) return validation.option;
         //    }
+        //    return 0;
+        //}
+
+        //public static int Home(Person owner)
+        //{
+        //    var validation = (result: false, option: 1);
+
+        //    while (validation.option > 0)
+        //    {
+        //        Console.WriteLine("Olá, {0}! O que deseja fazer?", owner.Name);
+        //        Console.WriteLine("1 - Criar Conta");
+        //        Console.WriteLine("2 - Selecionar Conta");
+        //        Console.WriteLine("0 - Sair da conta");
+
+        //        validation = Validation.Option();
+
+        //        if (validation.result) return validation.option;
+        //    }
+        //    return 0;
         //}
 
         public static int Home()
         {
-            int option = 1;
-            bool isValidInput = false;
+            var validation = (result: false, option: 1);
 
-            while (option > 0)
+            while (validation.option > 0)
             {
                 Console.WriteLine("O que deseja fazer?");
                 Console.WriteLine("1 - Criar Conta");
@@ -33,24 +55,14 @@ namespace SistemaBancario
                 Console.WriteLine("3 - Modo DEV");
                 Console.WriteLine("0 - Sair");
 
-                isValidInput = Validation.Option().Key;
-                option = Validation.Option().Value;
+                validation = Validation.Option();
 
-                if (isValidInput) return option;
-
-                //bool isValidInput = int.TryParse(Console.ReadLine(), out option);
-                //if (!isValidInput || option < 0)
-                //{
-                //    Console.Clear();
-                //    Console.WriteLine("Opção inválida!");
-                //    option = 1;                             // caso a conversão falhe, TryParse atribui 0 ao segundo parâmetro
-                //    continue;
-                //}
-                //return option;
+                if (validation.result) return validation.option;
             }
-
             return 0;
         }
+
+
 
         public static BankAccount? UserAccounts(Person person, List<BankAccount> bankAccounts)
         {
@@ -92,17 +104,16 @@ namespace SistemaBancario
                 Console.WriteLine("Número: {0} \t Saldo: {1:n2}", userAccounts[option - 1].Number, userAccounts[option - 1].Balance);
                 return userAccounts[option - 1];
             }
-
             return null;
         }
-        
+
         public static int Transactions(BankAccount account)
         {
             if (account == null) return 0;
 
-            int option = 1;
+            var validation = (result: false, option: 1);
 
-            while (option > 0)
+            while (validation.option > 0)
             {
                 Console.WriteLine("Selecione a transação que deseja realizar: ");
                 Console.WriteLine("1 - Depositar");
@@ -111,24 +122,18 @@ namespace SistemaBancario
                 Console.WriteLine("4 - Transferir");
                 Console.WriteLine("0 - Sair");
 
-                bool isValidInput = int.TryParse(Console.ReadLine(), out option);
-                if (!isValidInput || option < 0)
-                {
-                    Console.Clear();
-                    Console.WriteLine("Opção inválida!");
-                    option = 1;                             
-                    continue;
-                }
-            }
+                validation = Validation.Option();
 
+                if (validation.result) return validation.option;
+            }
             return 0;
         }
 
         public static int AccountType()
         {
-            int option = 1;
+            var validation = (result: false, option: 1);
 
-            while (option > 0)
+            while (validation.option > 0)
             {
                 Console.WriteLine("Selecione o tipo da conta que deseja criar: ");
                 Console.WriteLine("1 - Corrente");
@@ -136,39 +141,25 @@ namespace SistemaBancario
                 Console.WriteLine("3 - Poupança");
                 Console.WriteLine("0 - Sair");
 
-                bool isValidInput = int.TryParse(Console.ReadLine(), out option);
-                if (!isValidInput || option < 0)
-                {
-                    Console.Clear();
-                    Console.WriteLine("Opção inválida!");
-                    option = 1;
-                    continue;
-                }
+                validation = Validation.Option();
+                if (validation.result) return validation.option;
             }
-
             return 0;
         }
 
         public static int DevOptions()
         {
-            int option = 1;
+            var validation = (result: false, option: 1);
 
-            while (option > 0)
+            while (validation.option > 0)
             {
                 Console.WriteLine("Selecione o que deseja fazer:");
                 Console.WriteLine("1 - Listar todas as contas");
                 Console.WriteLine("0 - Sair");
 
-                bool isValidInput = int.TryParse(Console.ReadLine(), out option);
-                if (!isValidInput || option < 0)
-                {
-                    Console.Clear();
-                    Console.WriteLine("Opção inválida!");
-                    option = 1;
-                    continue;
-                }
+                validation = Validation.Option();
+                if (validation.result) return validation.option;
             }
-
             return 0;
         }
 

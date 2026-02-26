@@ -129,10 +129,10 @@ namespace SistemaBancario
             return name;
         }
 
-        static public KeyValuePair<bool, int> Option()
+        static public (bool, int) Option()
         {
             bool isValidInput = int.TryParse(Console.ReadLine(), out int option);
-            
+
             if (!isValidInput)
             {
                 Console.Clear();
@@ -147,7 +147,8 @@ namespace SistemaBancario
                 option = 1;
                 isValidInput = false;
             }
-            return new KeyValuePair<bool, int> (isValidInput, option);
+
+            return (isValidInput, option);
         }
     }
 }

@@ -19,13 +19,19 @@
             do
             {
                 Console.WriteLine("Insira o valor do depósito:");
-                userInput = Console.ReadLine();
-                isValidInput = decimal.TryParse(userInput, out depositValue);
 
-                if (!isValidInput || depositValue <= 0) Console.WriteLine("Valor inválido");
+                isValidInput = decimal.TryParse(Console.ReadLine(), out depositValue);
+
+                if (!isValidInput || depositValue <= 0)
+                {
+                    Console.Clear();
+                    Console.WriteLine("Valor inválido");
+                }
             } while (!isValidInput || depositValue <= 0);
 
             Balance += depositValue;
+            
+            Console.Clear();
             Console.WriteLine("Depósito concluído com sucesso! Saldo atual: {0}", Balance);
         }
 
