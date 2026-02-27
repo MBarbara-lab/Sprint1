@@ -4,7 +4,8 @@
     {
         public Saving(int number, Person owner) : base(number, owner)
         {
-            LoanLimit = owner.MonthlyIncome * 0.3m;
+            InitalLoanLimit = owner.MonthlyIncome * 0.3m;
+            CurrentLoanLimit = InitalLoanLimit;
             Type = "Poupança";
         }
 
@@ -24,7 +25,7 @@
                     if (validation.amount > Balance)
                     {
                         Console.Clear();
-                        Console.WriteLine("Saldo insuficiente!");
+                        Console.WriteLine("Saldo insuficiente! Saldo atual: {0:n2}", Balance);
                         validation.result = false;
                         continue;
                     }

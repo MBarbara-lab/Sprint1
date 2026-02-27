@@ -34,16 +34,10 @@ namespace SistemaBancario
             Business conta3 = new Business(3456, pessoa, 5000);
 
             conta.Deposit();
-            conta2.Deposit();
-            conta3.Deposit();
-
-            conta.Withdrawal();
-            conta2.Withdrawal();
-            conta3.Withdrawal();
-
             conta.WithdrawLoan();
-            conta2.WithdrawLoan();
-            conta3.WithdrawLoan();
+            conta.Withdrawal();
+            conta.PayLoan();
+            conta.PayLoan();
 
             int option = 1;
             while (option != 0)

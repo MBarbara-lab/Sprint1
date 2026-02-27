@@ -4,7 +4,8 @@
     {
         public Business(int number, Person owner, decimal monthlyIncome) : base(number, owner)
         {
-            LoanLimit = monthlyIncome * 0.5m;
+            InitalLoanLimit = monthlyIncome * 0.5m;
+            CurrentLoanLimit = InitalLoanLimit;
             Type = "Empresarial";
         }
 
@@ -22,7 +23,7 @@
                     if (validation.amount > Balance)
                     {
                         Console.Clear();
-                        Console.WriteLine("Saldo insuficiente!");
+                        Console.WriteLine("Saldo insuficiente! Saldo atual: {0:n2}", Balance);
                         validation.result = false;
                         continue;
                     }
