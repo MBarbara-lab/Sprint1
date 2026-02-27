@@ -8,16 +8,31 @@
             Type = "Empresarial";
         }
 
-        public override void Withdrawal(decimal value)
+        public override void Withdrawal()
         {
-            if (value > Balance)
-            {
-                Console.WriteLine("Saldo insuficiente!");
-                return;
-            }
+            var validation = (result: false, amount: 0m);
 
-            Balance -= value;
-            Console.WriteLine("Transação concluída com sucesso! Saldo atual: {0}", Balance);
+            while (!validation.result)
+            {
+                Console.WriteLine("Insira o valor que deseja sacar:");
+                validation = Validation.Amount();
+
+                if (validation.result)
+                {
+                    if (validation.amount > Balance)
+                    {
+                        Console.Clear();
+                        Console.WriteLine("Saldo insuficiente!");
+                        validation.result = false;
+                        continue;
+                    }
+
+                    Balance -= validation.amount;
+
+                    Console.Clear();
+                    Console.WriteLine("Saque concluída com sucesso! Saldo atual: {0:n2}", Balance);
+                }
+            }
         }
     }
 }

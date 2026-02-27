@@ -4,13 +4,12 @@
 // -> Usar construtor primário
 
 // PENDENTES:
+// - Função de pagar empréstimo
 // - Função Transferir
 // - Transações após selecionar conta
 // - Pagar empréstimo. Se pagar parcelado, juros cumulativos
 // - Enxugar as validações de entrada, retirando a bool isValidInput
 // - UI nos textos: https://gemini.google.com/app/a9e3bd3d2f67f91b?hl=pt-BR
-// - Deletar o código de Validation
-// - Melhorar o Controller
 
 // EM PROPGRESSO:
 // - Menu de criar conta
@@ -31,7 +30,20 @@ namespace SistemaBancario
 
             Person pessoa = new Person(40, "12345678901", 2000, "OII");
             Checking conta = new Checking(3456, pessoa);
+            Saving conta2 = new Saving(3456, pessoa);
+            Business conta3 = new Business(3456, pessoa, 5000);
+
             conta.Deposit();
+            conta2.Deposit();
+            conta3.Deposit();
+
+            conta.Withdrawal();
+            conta2.Withdrawal();
+            conta3.Withdrawal();
+
+            conta.WithdrawLoan();
+            conta2.WithdrawLoan();
+            conta3.WithdrawLoan();
 
             int option = 1;
             while (option != 0)
@@ -54,7 +66,9 @@ namespace SistemaBancario
                         string? ownerCpf = Validation.Cpf();
                         if (ownerCpf == null) break;
 
-                        if (Utils.SearchOwner(owners, ownerCpf) == null)
+                        client = Utils.SearchOwner(owners, ownerCpf);
+
+                        if (client == null)
                         {
                             Console.Clear();
                             string? ownerName = Validation.Name();
@@ -67,11 +81,6 @@ namespace SistemaBancario
 
                             client = new Person(ownerAge, ownerCpf, ownerMonthlyIncome, ownerName);
                             owners.Add(client);
-                        }
-                        else
-                        {
-                            client = Utils.SearchOwner(owners, ownerCpf);
-                            if (client == null) break; 
                         }
 
                         Console.Clear();

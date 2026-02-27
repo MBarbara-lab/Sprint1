@@ -62,8 +62,6 @@ namespace SistemaBancario
             return 0;
         }
 
-
-
         public static BankAccount? UserAccounts(Person person, List<BankAccount> bankAccounts)
         {
             List<BankAccount> userAccounts = new List<BankAccount>();
@@ -91,7 +89,7 @@ namespace SistemaBancario
                 Console.WriteLine("\n0 - Sair");
 
                 isValidInput = int.TryParse(Console.ReadLine(), out option);
-                if (option <= 0 || option > userAccounts.Count || !isValidInput)
+                if (option < 0 || option > userAccounts.Count || !isValidInput)
                 {
                     Console.Clear();
                     Console.WriteLine("Opção inválida!");
@@ -100,9 +98,13 @@ namespace SistemaBancario
                     continue;
                 }
 
-                Console.WriteLine("Conta {0} selecionada", userAccounts[option - 1].Type);
-                Console.WriteLine("Número: {0} \t Saldo: {1:n2}", userAccounts[option - 1].Number, userAccounts[option - 1].Balance);
-                return userAccounts[option - 1];
+                if (option != 0)
+                {
+                    Console.WriteLine("Conta {0} selecionada", userAccounts[option - 1].Type);
+                    Console.WriteLine("Número: {0} \t Saldo: {1:n2}", userAccounts[option - 1].Number, userAccounts[option - 1].Balance);
+                    return userAccounts[option - 1];
+                }
+                else Console.Clear();
             }
             return null;
         }

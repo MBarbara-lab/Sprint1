@@ -8,67 +8,25 @@
         public Person Owner { get; protected set; }
         public string? Type { get; protected set; }
 
-        abstract public void Withdrawal(decimal amount);
+        abstract public void Withdrawal();
 
         public void Deposit()
         {
-            string? userInput;
-            bool isValidInput = true;
-            decimal depositValue;
+            var validation = (result: false, amount: 0m);
 
-            do
+            while (!validation.result)
             {
-                Console.WriteLine("Insira o valor do depósito:");
-                userInput = Console.ReadLine();
+                Console.WriteLine("Insira o valor que deseja depositar:");
+                validation = Validation.Amount();
 
-                userInput = userInput.Trim();
-
-                if (userInput == "")
+                if (validation.result)
                 {
+                    Balance += validation.amount;
+
                     Console.Clear();
-                    Console.WriteLine("O valor não deve ser nulo!");
-                    continue;
+                    Console.WriteLine("Depósito concluído com sucesso! Saldo atual: {0:n2}", Balance);
                 }
-
-                foreach (char digit in userInput)
-                {
-                    int commaQtd = 0;
-
-                    if (!char.IsDigit(digit))
-                    {
-                        if (digit == ',')
-                        {
-                            commaQtd++;
-                            isValidInput = commaQtd > 1 ? false : true;
-                        }
-
-                        if (digit == '.')
-                        {
-                            //digit = ',';
-                            commaQtd++;
-                            isValidInput = commaQtd > 1 ? false : true;
-                        }
-
-                        if (!isValidInput)
-                        {
-                            Console.WriteLine("O modelo aceito é: 40,");
-                        }
-                    }
-                }
-
-                isValidInput = decimal.TryParse(userInput, out depositValue);
-
-                if (!isValidInput || depositValue <= 0)
-                {
-                    Console.Clear();
-                    Console.WriteLine("Valor inválido");
-                }
-            } while (!isValidInput || depositValue <= 0);
-
-            Balance += depositValue;
-            
-            Console.Clear();
-            Console.WriteLine("Depósito concluído com sucesso! Saldo atual: {0}", Balance);
+            }
         }
 
         public BankAccount(int number, Person owner)
@@ -77,17 +35,32 @@
             Owner = owner;
         }
 
-        public void Loan(decimal value)
+        public void WithdrawLoan()
         {
-            if (value > LoanLimit)
-            {
-                Console.WriteLine("Empréstimo excede o limite!");
-                return;
-            }
+            var validation = (result: false, amount: 0m);
 
-            LoanLimit -= value;
-            Balance += value;
-            Console.WriteLine("Empréstimo concedido! Saldo atual: {0}", Balance);
+            while (!validation.result)
+            {
+                Console.WriteLine("Insira o valor que deseja pegar de empréstimo:");
+                validation = Validation.Amount();
+
+                if (validation.result)
+                {
+                    if (validation.amount > LoanLimit)
+                    {
+                        Console.Clear();
+                        Console.WriteLine("Empréstimo excede o limite! Limite disponível: {0:n2}", LoanLimit);
+                        validation.result = false;
+                        continue;
+                    }
+
+                    LoanLimit -= validation.amount;
+                    Balance += validation.amount;
+
+                    Console.Clear();
+                    Console.WriteLine("Empréstimo concedido! Saldo atual: {0:n2}", Balance);
+                }
+            }
         }
     }
 }

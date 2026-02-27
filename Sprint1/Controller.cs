@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualBasic.FileIO;
-using SistemaBancario.BankAccounts;
+﻿using SistemaBancario.BankAccounts;
 
 namespace SistemaBancario
 {

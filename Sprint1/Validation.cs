@@ -151,56 +151,52 @@ namespace SistemaBancario
             return (isValidInput, option);
         }
 
-        static public (bool, decimal) Amount (string text)
+        static public (bool, decimal) Amount()
         {
             string? userInput;
-            bool isValidInput;
-            decimal amount = 0;
+            bool isValidInput = true;
 
-            do
+            userInput = Console.ReadLine();
+            if (userInput != null) userInput = userInput.Trim();
+
+            if (userInput == null || userInput == "")
             {
-                isValidInput = true;
+                Console.Clear();
+                Console.WriteLine("O valor não deve ser nulo!");
+                return (false, 0);
+            }
 
-                Console.WriteLine("{0}", text);
-                userInput = Console.ReadLine();
+            userInput = userInput.Replace('.', ',');
 
-                userInput = userInput.Trim();
+            foreach (char digit in userInput)
+            {
+                int commaQtd = 0;
 
-                if (userInput == "")
+                if (!char.IsDigit(digit))
                 {
-                    Console.Clear();
-                    Console.WriteLine("O valor não deve ser nulo!");
-                    continue;
-                }
-
-                userInput = userInput.Replace('.', ',');
-
-                foreach (char digit in userInput)
-                {
-                    int commaQtd = 0;
-
-                    if (!char.IsDigit(digit))
+                    if (digit == ',' && commaQtd == 0) commaQtd++;
+                    else
                     {
-                        if (digit == ',' && commaQtd == 0) commaQtd++;
-                        else
-                        {
-                            Console.Clear();
-                            isValidInput = false;
-                            Console.WriteLine("Por favor, digite um valor válido! Ex: 40,77 ou 23.54");
-                            break;
-                        }
+                        Console.Clear();
+                        isValidInput = false;
+                        Console.WriteLine("Por favor, digite um valor válido! Ex: 40,77 ou 23.54");
+                        break;
                     }
                 }
-                if (!isValidInput) continue;
+            }
+            
+            if (!isValidInput) return (false, 0);
 
-                isValidInput = decimal.TryParse(userInput, out amount);
+            isValidInput = decimal.TryParse(userInput, out decimal amount);
 
-                if (!isValidInput || amount <= 0)
-                {
-                    Console.Clear();
-                    Console.WriteLine("Valor inválido! Modelo aceito: 13,32 ou 6.88");
-                }
-            } while (!isValidInput || amount <= 0);
+            if (!isValidInput || amount <= 0)
+            {
+                Console.Clear();
+                Console.WriteLine("Valor inválido! Modelo aceito: 13,32 ou 6.88");
+                return (false, 0);
+            }
+
+            return (isValidInput, amount);
         }
     }
 }

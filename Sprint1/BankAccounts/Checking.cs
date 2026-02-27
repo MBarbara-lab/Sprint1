@@ -10,17 +10,33 @@
 
         private decimal WithdrawalTax { get; set; } = 0.05m;
 
-        public override void Withdrawal(decimal value)
+        public override void Withdrawal()
         {
-            decimal total = (value * WithdrawalTax) + value;
-            if (total > Balance || value <= 0)
-            {
-                Console.WriteLine("Saldo insuficiente!");
-                return;
-            }
+            var validation = (result: false, amount: 0m);
 
-            Balance -= total;
-            Console.WriteLine("Transação concluída com sucesso! Saldo atual: {0}", Balance);
+            while (!validation.result)
+            {
+                Console.WriteLine("Insira o valor que deseja sacar:");
+                validation = Validation.Amount();
+
+                if (validation.result)
+                {
+                    decimal totalAmount = validation.amount * (1 + WithdrawalTax);
+                    
+                    if (totalAmount > Balance)
+                    {
+                        Console.Clear();
+                        Console.WriteLine("Saldo insuficiente!");
+                        validation.result = false;
+                        continue;
+                    }
+
+                    Balance -= totalAmount;
+
+                    Console.Clear();
+                    Console.WriteLine("Saque concluída com sucesso! Saldo atual: {0:n2}", Balance);
+                }
+            }
         }
     }
 }
