@@ -73,9 +73,7 @@ namespace SistemaBancario
 
                     case 1:
                         Console.Clear();
-
-                        Console.WriteLine("Saindo da conta...");
-                        //currentAccount.Withdrawal();
+                        
                         break;
 
                     case 2:

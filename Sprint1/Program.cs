@@ -4,7 +4,6 @@
 // -> Usar construtor primário
 
 // PENDENTES:
-// - Função de pagar empréstimo
 // - Função Transferir
 // - Transações após selecionar conta
 // - Pagar empréstimo. Se pagar parcelado, juros cumulativos
@@ -28,16 +27,16 @@ namespace SistemaBancario
             List<BankAccount> bankAccounts = new List<BankAccount>();
             List<Person> owners = new List<Person>();
 
-            Person pessoa = new Person(40, "12345678901", 2000, "OII");
-            Checking conta = new Checking(3456, pessoa);
-            Saving conta2 = new Saving(3456, pessoa);
-            Business conta3 = new Business(3456, pessoa, 5000);
+            //Person pessoa = new Person(40, "12345678901", 2000, "OII");
+            //Checking conta = new Checking(3456, pessoa);
+            //Saving conta2 = new Saving(3456, pessoa);
+            //Business conta3 = new Business(3456, pessoa, 5000);
 
-            conta.Deposit();
-            conta.WithdrawLoan();
-            conta.Withdrawal();
-            conta.PayLoan();
-            conta.PayLoan();
+            //conta.Deposit();
+            //conta.WithdrawLoan();
+            //conta.Withdrawal();
+            //conta.PayLoan();
+            //conta.PayLoan();
 
             int option = 1;
             while (option != 0)

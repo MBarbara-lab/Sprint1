@@ -47,7 +47,7 @@ namespace SistemaBancario
         {
             var validation = (result: false, option: 1);
 
-            while (validation.option > 0)
+            while (!validation.result)
             {
                 Console.WriteLine("O que deseja fazer?");
                 Console.WriteLine("1 - Criar Conta");
@@ -56,10 +56,8 @@ namespace SistemaBancario
                 Console.WriteLine("0 - Sair");
 
                 validation = Validation.Option();
-
-                if (validation.result) return validation.option;
             }
-            return 0;
+            return validation.option;
         }
 
         public static BankAccount? UserAccounts(Person person, List<BankAccount> bankAccounts)
@@ -111,11 +109,15 @@ namespace SistemaBancario
 
         public static int Transactions(BankAccount account)
         {
-            if (account == null) return 0;
+            if (account == null)
+            {
+                Console.WriteLine("Erro: conta não encontrada.");
+                return 0;
+            }
 
             var validation = (result: false, option: 1);
 
-            while (validation.option > 0)
+            while (!validation.result)
             {
                 Console.WriteLine("Selecione a transação que deseja realizar: ");
                 Console.WriteLine("1 - Depositar");
@@ -125,17 +127,15 @@ namespace SistemaBancario
                 Console.WriteLine("0 - Sair");
 
                 validation = Validation.Option();
-
-                if (validation.result) return validation.option;
             }
-            return 0;
+            return validation.option;
         }
 
         public static int AccountType()
         {
             var validation = (result: false, option: 1);
 
-            while (validation.option > 0)
+            while (!validation.result)
             {
                 Console.WriteLine("Selecione o tipo da conta que deseja criar: ");
                 Console.WriteLine("1 - Corrente");
@@ -144,25 +144,23 @@ namespace SistemaBancario
                 Console.WriteLine("0 - Sair");
 
                 validation = Validation.Option();
-                if (validation.result) return validation.option;
             }
-            return 0;
+            return validation.option;
         }
 
         public static int DevOptions()
         {
             var validation = (result: false, option: 1);
 
-            while (validation.option > 0)
+            while (!validation.result)
             {
                 Console.WriteLine("Selecione o que deseja fazer:");
                 Console.WriteLine("1 - Listar todas as contas");
                 Console.WriteLine("0 - Sair");
 
                 validation = Validation.Option();
-                if (validation.result) return validation.option;
             }
-            return 0;
+            return validation.option;
         }
 
     }
