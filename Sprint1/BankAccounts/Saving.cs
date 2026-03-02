@@ -7,36 +7,10 @@
             InitalLoanLimit = owner.MonthlyIncome * 0.3m;
             CurrentLoanLimit = InitalLoanLimit;
             Type = "Poupança";
+            WithdrawalTax = 0;
         }
 
         private decimal Income { get; set; } = 0.005m;
-
-        public override void Withdrawal()
-        {
-            var validation = (result: false, amount: 0m);
-
-            while (!validation.result)
-            {
-                Console.WriteLine("Insira o valor que deseja sacar:");
-                validation = Validation.Amount();
-
-                if (validation.result)
-                {
-                    if (validation.amount > Balance)
-                    {
-                        Console.Clear();
-                        Console.WriteLine("Saldo insuficiente! Saldo atual: {0:n2}", Balance);
-                        validation.result = false;
-                        continue;
-                    }
-
-                    Balance -= validation.amount;
-
-                    Console.Clear();
-                    Console.WriteLine("Saque concluída com sucesso! Saldo atual: {0:n2}", Balance);
-                }
-            }
-        }
 
         public void IncomeForecast()
         {

@@ -73,17 +73,27 @@ namespace SistemaBancario
 
                     case 1:
                         Console.Clear();
-                        
+                        currentAccount.Deposit();
                         break;
 
                     case 2:
                         Console.Clear();
-                        Console.WriteLine("Op2");
+                        currentAccount.PayLoan();
                         break;
 
                     case 3:
                         Console.Clear();
-                        Console.WriteLine("Op3");
+                        currentAccount.Withdrawal(currentAccount.WithdrawalTax);
+                        break;
+
+                    case 4:
+                        Console.Clear();
+                        currentAccount.WithdrawLoan();
+                        break;
+                    
+                    case 5:
+                        Console.Clear();
+                        currentAccount.Transfer();
                         break;
 
                     default:

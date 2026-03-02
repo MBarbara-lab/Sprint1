@@ -100,37 +100,7 @@ namespace SistemaBancario
                         BankAccount? currentAccount = Menu.UserAccounts(client, bankAccounts);
                         if (currentAccount == null) break;
 
-                        //int transactionOption = 1;
-                        //while (transactionOption != 0)
-                        //{
-                        //    transactionOption = Menu.Transactions(currentAccount);
-                        //    switch (option)
-                        //    {
-                        //        case 0:
-                        //            Console.Clear();
-                        //            break;
-
-                        //        case 1:
-                        //            Console.Clear();
-                        //            Console.WriteLine("Op1");
-                        //            break;
-
-                        //        case 2:
-                        //            Console.Clear();
-                        //            Console.WriteLine("Op2");
-                        //            break;
-
-                        //        case 3:
-                        //            Console.Clear();
-                        //            Console.WriteLine("Op3");
-                        //            break;
-
-                        //        default:
-                        //            Console.Clear();
-                        //            Console.WriteLine("Opção inválida! Tente novamente.");
-                        //            break;
-                        //    }
-                        //}
+                        Controller.Transactions(currentAccount);
                         break;
 
                     case 3:
