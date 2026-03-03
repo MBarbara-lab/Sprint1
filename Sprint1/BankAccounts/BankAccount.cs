@@ -12,7 +12,7 @@ namespace SistemaBancario.BankAccounts
         public IAccountOwner Owner { get; protected set; }
         public string? Type { get; protected set; }
 
-        public BankAccount(int number, Person owner)
+        public BankAccount(int number, IAccountOwner owner)
         {
             Number = number;
             Owner = owner;
@@ -151,6 +151,11 @@ namespace SistemaBancario.BankAccounts
                     }
                 }
             }
+        }
+
+        public virtual void IncomeForecast()
+        {
+            Console.WriteLine("Essa conta não possui rendimento.");
         }
 
         public void Transfer()

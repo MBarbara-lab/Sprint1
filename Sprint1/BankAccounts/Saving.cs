@@ -14,7 +14,7 @@ namespace SistemaBancario.BankAccounts
 
         private decimal Income { get; set; } = 0.005m;
 
-        public void IncomeForecast()
+        public override void IncomeForecast()
         {
             string? userInput;
             bool isValidInput;

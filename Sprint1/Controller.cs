@@ -84,15 +84,20 @@ namespace SistemaBancario
 
                     case 3:
                         Console.Clear();
-                        currentAccount.Withdrawal(currentAccount.WithdrawalTax);
+                        currentAccount.IncomeForecast();
                         break;
 
                     case 4:
                         Console.Clear();
+                        currentAccount.Withdrawal(currentAccount.WithdrawalTax);
+                        break;
+
+                    case 5:
+                        Console.Clear();
                         currentAccount.WithdrawLoan();
                         break;
                     
-                    case 5:
+                    case 6:
                         Console.Clear();
                         currentAccount.Transfer();
                         break;

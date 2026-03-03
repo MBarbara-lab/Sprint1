@@ -123,9 +123,10 @@ namespace SistemaBancario
                 Console.WriteLine("Selecione a transação que deseja realizar: ");
                 Console.WriteLine("1 - Depositar");
                 Console.WriteLine("2 - Pagar Empréstimo");
-                Console.WriteLine("3 - Sacar");
-                Console.WriteLine("4 - Solicitar Empréstimo");
-                Console.WriteLine("5 - Transferir");
+                Console.WriteLine("3 - Prever Rendimento");
+                Console.WriteLine("4 - Sacar");
+                Console.WriteLine("5 - Solicitar Empréstimo");
+                Console.WriteLine("6 - Transferir");
                 Console.WriteLine("0 - Sair");
 
                 validation = Validation.Option();
