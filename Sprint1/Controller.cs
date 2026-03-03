@@ -1,10 +1,11 @@
 ﻿using SistemaBancario.BankAccounts;
+using SistemaBancario.Owner;
 
 namespace SistemaBancario
 {
     public class Controller
     {
-        public static void AccountType (Person client, List<BankAccount> bankAccounts)
+        public static void AccountType (IAccountOwner client, List<BankAccount> bankAccounts)
         {
             int option = 1;
             Random rdn = new Random();

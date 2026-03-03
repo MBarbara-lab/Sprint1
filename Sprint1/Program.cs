@@ -2,6 +2,7 @@
 // EXTRA:
 // -> Empresarial vai passar a receber cnpj (alfanumérico) e pessoa vai passar a possuir cnpj tbm ;)
 // -> Usar construtor primário
+// -> Contas compartilhadas
 
 // PENDENTES:
 // - Função Transferir
@@ -17,6 +18,7 @@
 
 
 using SistemaBancario.BankAccounts;
+using SistemaBancario.Owner;
 
 namespace SistemaBancario
 {
@@ -25,7 +27,7 @@ namespace SistemaBancario
         static void Main()
         {
             List<BankAccount> bankAccounts = new List<BankAccount>();
-            List<Person> owners = new List<Person>();
+            List<IAccountOwner> owners = new List<IAccountOwner>();
 
             //Person pessoa = new Person(40, "12345678901", 2000, "OII");
             //Checking conta = new Checking(3456, pessoa);
@@ -52,7 +54,7 @@ namespace SistemaBancario
                     case 1:
                         Console.Clear();
                         Random rdn = new Random();
-                        Person? client;
+                        IAccountOwner? client;
 
                         int ownerAge;
 

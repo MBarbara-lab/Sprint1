@@ -1,4 +1,6 @@
-﻿namespace SistemaBancario.BankAccounts
+﻿using SistemaBancario.Owner;
+
+namespace SistemaBancario.BankAccounts
 {
     public abstract class BankAccount
     {
@@ -6,7 +8,7 @@
         public decimal InitalLoanLimit { get; protected set; }
         public decimal CurrentLoanLimit { get; protected set; }
         public decimal Number { get; protected set; }
-        public Person Owner { get; protected set; }
+        public IAccountOwner Owner { get; protected set; }
         public string? Type { get; protected set; }
 
         abstract public void Withdrawal();
@@ -30,7 +32,7 @@
             }
         }
 
-        public BankAccount(int number, Person owner)
+        public BankAccount(int number, IAccountOwner owner)
         {
             Number = number;
             Owner = owner;

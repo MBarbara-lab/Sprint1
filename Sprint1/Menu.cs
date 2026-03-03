@@ -1,4 +1,5 @@
 ﻿using SistemaBancario.BankAccounts;
+using SistemaBancario.Owner;
 
 namespace SistemaBancario
 {
@@ -25,7 +26,7 @@ namespace SistemaBancario
         //    return 0;
         //}
 
-        //public static int Home(Person owner)
+        //public static int Home(IAccountOwner owner)
         //{
         //    var validation = (result: false, option: 1);
 
@@ -60,7 +61,7 @@ namespace SistemaBancario
             return validation.option;
         }
 
-        public static BankAccount? UserAccounts(Person person, List<BankAccount> bankAccounts)
+        public static BankAccount? UserAccounts(IAccountOwner person, List<BankAccount> bankAccounts)
         {
             List<BankAccount> userAccounts = new List<BankAccount>();
             if (person == null) return null;
@@ -75,7 +76,7 @@ namespace SistemaBancario
                 int i = 1;
                 foreach (BankAccount account in bankAccounts)
                 {
-                    if (account.Owner.Cpf == person.Cpf)
+                    if (account.Owner.Identifier == person.Identifier)
                     {
                         Console.WriteLine("\n#{0} - Conta {1}", i, account.Type);
                         Console.Write("Saldo: {0}", account.Balance);

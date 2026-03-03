@@ -1,8 +1,10 @@
-﻿namespace SistemaBancario.BankAccounts
+﻿using SistemaBancario.Owner;
+
+namespace SistemaBancario.BankAccounts
 {
     class Business : BankAccount
     {
-        public Business(int number, Person owner, decimal monthlyIncome) : base(number, owner)
+        public Business(int number, IAccountOwner owner, decimal monthlyIncome) : base(number, owner)
         {
             InitalLoanLimit = monthlyIncome * 0.5m;
             CurrentLoanLimit = InitalLoanLimit;

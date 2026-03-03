@@ -1,4 +1,5 @@
 ﻿using SistemaBancario.BankAccounts;
+using SistemaBancario.Owner;
 
 namespace SistemaBancario
 {
@@ -15,11 +16,11 @@ namespace SistemaBancario
             }
         }
 
-        public static Person? SearchOwner<T>(List<T> owners, string searchedValue) where T : Person
+        public static IAccountOwner? SearchOwner<T>(List<T> owners, string searchedValue) where T : IAccountOwner
         {
             foreach (T person in owners)
             {
-                if (person.Cpf == searchedValue) return person;
+                if (person.Identifier == searchedValue) return person;
             }
             return null;
         }
