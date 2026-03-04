@@ -1,6 +1,4 @@
-﻿using System.Xml.Linq;
-
-namespace SistemaBancario.Owner
+﻿namespace SistemaBancario.Owner
 {
     public class Company : IAccountOwner
     {

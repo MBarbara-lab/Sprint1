@@ -24,5 +24,20 @@ namespace SistemaBancario
             }
             return null;
         }
+
+        public static User? SearchUser(List<User> users, string searchedEmail, string searchedPassword)
+        {
+            int i = 0;
+            while (users[i].Email != searchedEmail) i++;
+
+            if (i >= users.Count() || users[i].Password == searchedPassword)
+            {
+                Console.Clear();
+                Console.WriteLine("Email ou senha incorretos.");
+                return null;
+            }
+            
+            return users[i];
+        }
     }
 }

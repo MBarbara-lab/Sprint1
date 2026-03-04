@@ -9,13 +9,13 @@ namespace SistemaBancario.BankAccounts
         public decimal CurrentLoanLimit { get; protected set; }
         public decimal WithdrawalTax { get; protected set; }
         public decimal Number { get; protected set; }
-        public IAccountOwner Owner { get; protected set; }
+        public string OwnerIdentifier { get; protected set; }
         public string? Type { get; protected set; }
 
-        public BankAccount(int number, IAccountOwner owner)
+        public BankAccount(int number, string ownerIdentifier)
         {
             Number = number;
-            Owner = owner;
+            OwnerIdentifier = ownerIdentifier;
         }
 
         public void Withdrawal(decimal withdrawalTax) {

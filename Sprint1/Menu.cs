@@ -5,61 +5,78 @@ namespace SistemaBancario
 {
     class Menu
     {
-        //public static int Start()
-        //{
-        //    var validation = (result: false, option: 1);
+        public static int Start()
+        {
+            var validation = (result: false, option: 1);
 
-        //    while (validation.option > 0)
-        //    {
-        //        Console.WriteLine("Boas vindas ao EventHorizon Bank!\n");
+            while (validation.option > 0)
+            {
+                Console.WriteLine("Boas vindas ao EventHorizon Bank!\n");
 
-        //        Console.WriteLine("Selecione uma opção:");
-        //        Console.WriteLine("1 - Cadastre-se");
-        //        Console.WriteLine("2 - Entrar");
-        //        Console.WriteLine("3 - Modo DEV");
-        //        Console.WriteLine("0 - Sair");
+                Console.WriteLine("Selecione uma opção:");
+                Console.WriteLine("1 - Cadastre-se");
+                Console.WriteLine("2 - Entrar");
+                Console.WriteLine("3 - Modo DEV");
+                Console.WriteLine("0 - Encerrar");
 
-        //        validation = Validation.Option();
+                validation = Validation.Option();
 
-        //        if (validation.result) return validation.option;
-        //    }
-        //    return 0;
-        //}
+                if (validation.result) return validation.option;
+            }
+            return 0;
+        }
 
-        //public static int Home(IAccountOwner owner)
-        //{
-        //    var validation = (result: false, option: 1);
-
-        //    while (validation.option > 0)
-        //    {
-        //        Console.WriteLine("Olá, {0}! O que deseja fazer?", owner.Name);
-        //        Console.WriteLine("1 - Criar Conta");
-        //        Console.WriteLine("2 - Selecionar Conta");
-        //        Console.WriteLine("0 - Sair da conta");
-
-        //        validation = Validation.Option();
-
-        //        if (validation.result) return validation.option;
-        //    }
-        //    return 0;
-        //}
-
-        public static int Home()
+        public static int UserType()
         {
             var validation = (result: false, option: 1);
 
             while (!validation.result)
             {
-                Console.WriteLine("O que deseja fazer?");
-                Console.WriteLine("1 - Criar Conta");
-                Console.WriteLine("2 - Entrar na Conta");
-                Console.WriteLine("3 - Modo DEV");
+                Console.WriteLine("Selecione o tipo de perfil:");
+                Console.WriteLine("1 - Pessoa Física");
+                Console.WriteLine("2 - Pessoa Jurídica");
                 Console.WriteLine("0 - Sair");
 
                 validation = Validation.Option();
             }
             return validation.option;
         }
+
+        public static int Home(User currentUser)
+        {
+            var validation = (result: false, option: 1);
+
+            while (validation.option > 0)
+            {
+                Console.WriteLine("Olá! O que deseja fazer?");
+                Console.WriteLine("1 - Abrir conta bancária");
+                Console.WriteLine("2 - Selecionar conta bancária");
+                Console.WriteLine("3 - Alterar dados pessoais");
+                Console.WriteLine("0 - Sair");
+
+                validation = Validation.Option();
+
+                if (validation.result) return validation.option;
+            }
+            return 0;
+        }
+
+        //public static int Home()
+        //{
+        //    var validation = (result: false, option: 1);
+
+        //    while (!validation.result)
+        //    {
+        //        Console.WriteLine("O que deseja fazer?");
+        //        Console.WriteLine("1 - Criar Conta");
+        //        Console.WriteLine("2 - Entrar na Conta");
+        //        Console.WriteLine("3 - Modo DEV");
+        //        Console.WriteLine("0 - Sair");
+
+        //        validation = Validation.Option();
+        //    }
+        //    return validation.option;
+        //}
 
         public static BankAccount? UserAccounts(IAccountOwner person, List<BankAccount> bankAccounts)
         {
@@ -99,6 +116,7 @@ namespace SistemaBancario
 
                 if (option != 0)
                 {
+                    Console.Clear();
                     Console.WriteLine("Conta {0} selecionada", userAccounts[option - 1].Type);
                     Console.WriteLine("Número: {0} \t Saldo: {1:n2}", userAccounts[option - 1].Number, userAccounts[option - 1].Balance);
                     return userAccounts[option - 1];
@@ -142,8 +160,7 @@ namespace SistemaBancario
             {
                 Console.WriteLine("Selecione o tipo da conta que deseja criar: ");
                 Console.WriteLine("1 - Corrente");
-                Console.WriteLine("2 - Empresarial");
-                Console.WriteLine("3 - Poupança");
+                Console.WriteLine("2 - Poupança");
                 Console.WriteLine("0 - Sair");
 
                 validation = Validation.Option();

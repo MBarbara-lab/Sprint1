@@ -5,11 +5,11 @@
         public string Identifier { get; protected set; }
         public string? Name { get; private set; }
         public decimal MonthlyIncome { get; protected set; }
-        public int Age { get; private set; }
+        public string DateOfBirth { get; private set; }
 
-        public Person(int age, string cpf, decimal salary, string? name)
+        public Person(string cpf, string dateOfBirth, decimal salary, string? name)
         {
-            Age = age;
+            DateOfBirth = dateOfBirth;
             Identifier = cpf;
             MonthlyIncome = salary;
             Name = name;
