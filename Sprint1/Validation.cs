@@ -96,7 +96,7 @@ namespace SistemaBancario
 
             return monthlyIncome;
         }
-        static public string? Name()
+        static public string? Name(string text)
         {
             bool isValidInput;
             string? name;
@@ -104,7 +104,7 @@ namespace SistemaBancario
             do
             {
                 isValidInput = true;
-                Console.WriteLine("Insira seu nome:");
+                Console.WriteLine("{0}", text);
                 name = Console.ReadLine();
                 name = name?.Trim() ?? "";
                 if (name == "")

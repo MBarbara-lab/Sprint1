@@ -4,10 +4,11 @@ namespace SistemaBancario.BankAccounts
 {
     class Business : BankAccount
     {
-        public Business(int number, IAccountOwner owner, decimal monthlyIncome) : base(number, owner)
+        public Business(int number, IAccountOwner company, User user) : base(number, company, user)
         {
-            InitalLoanLimit = monthlyIncome * 0.5m;
-            LoanDebt = InitalLoanLimit;
+            UserId = user.Id;
+
+            LoanLimit = company.MonthlyIncome * 0.5m;
             Type = "Empresarial";
             WithdrawalTax = 0;
         }

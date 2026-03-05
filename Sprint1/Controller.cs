@@ -5,12 +5,13 @@ namespace SistemaBancario
 {
     public class Controller
     {
-        public static void AccountType (IAccountOwner client, List<BankAccount> bankAccounts)
+        public static void AccountType (User user, IAccountOwner client, List<BankAccount> bankAccounts)
         {
             int option = 1;
             Random rdn = new Random();
             int accountNumber;
             bool isAccountCreated = false;
+            BankAccount newAccount;
 
             while (option != 0 && !isAccountCreated)
             {
@@ -25,24 +26,14 @@ namespace SistemaBancario
                         Console.Clear();
                         accountNumber = rdn.Next(100000, 200000);
 
-                        bankAccounts.Add(new Checking(accountNumber, client));
+                        newAccount = new Checking(accountNumber, client);
+                        bankAccounts.Add(newAccount);
+
                         Console.WriteLine("Sua conta corrente foi criada!");
                         isAccountCreated = true;
                         break;
 
                     case 2:
-                        Console.Clear();
-                        accountNumber = rdn.Next(100000, 200000);
-
-                        decimal businessMonthlyIncome = Validation.MonthlyIncome("Insira a renda mensal do seu negócio: ");
-
-                        Console.Clear();
-                        bankAccounts.Add(new Business(accountNumber, client, businessMonthlyIncome));
-                        Console.WriteLine("Sua conta empresarial foi criada!");
-                        isAccountCreated = true;
-                        break;
-
-                    case 3:
                         Console.Clear();
                         accountNumber = rdn.Next(100000, 200000);
 

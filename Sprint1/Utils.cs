@@ -21,11 +21,29 @@ namespace SistemaBancario
             }
         }
 
-        public static IAccountOwner? SearchOwner<T>(List<T> owners, string searchedValue) where T : IAccountOwner
+        public static IAccountOwner? SearchOwner(List<IAccountOwner> owners, string searchedIdentifier)
         {
-            foreach (T person in owners)
+            foreach (IAccountOwner owner in owners)
             {
-                if (person.Identifier == searchedValue) return person;
+                if (owner.Identifier == searchedIdentifier) return owner;
+            }
+            return null;
+        }
+
+        public static Person? SearchPerson(List<Person> people, string searchedCpf)
+        {
+            foreach (Person person in people)
+            {
+                if (person.Identifier == searchedCpf) return person;
+            }
+            return null;
+        }
+
+        public static Company? SearchCompany(List<Company> companies, string searchedCnpj)
+        {
+            foreach (Company company in companies)
+            {
+                if (company.Identifier == searchedCnpj) return company;
             }
             return null;
         }
@@ -35,12 +53,7 @@ namespace SistemaBancario
             int i = 0;
             while (users[i].Email != searchedEmail) i++;
 
-            if (i >= users.Count() || users[i].Password == searchedPassword)
-            {
-                Console.Clear();
-                Console.WriteLine("Email ou senha incorretos.");
-                return null;
-            }
+            if (i >= users.Count() || users[i].Password == searchedPassword) return null;
             
             return users[i];
         }
