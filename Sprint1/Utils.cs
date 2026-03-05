@@ -5,11 +5,16 @@ namespace SistemaBancario
 {
     class Utils
     {
-        public static void PrintAccounts<T>(List<T> list) where T : BankAccount
+        public static void PrintAccounts<T>(List<T> list, List<IAccountOwner> owners) where T : BankAccount
         {
+            IAccountOwner? currentOwner;
             foreach (T account in list)
             {
-                Console.WriteLine("Titular {0}", account.Owner.Name);
+                currentOwner = Utils.SearchOwner(owners, account.OwnerIdentifier);
+
+                if (currentOwner == null) continue;
+
+                Console.WriteLine("Titular {0}", currentOwner.Name);
                 Console.WriteLine(" Tipo:  {0}", account.Type);
                 Console.WriteLine(" Conta: {0}", account.Number);
                 Console.WriteLine(" Saldo: R$ {0:n2}", account.Balance);

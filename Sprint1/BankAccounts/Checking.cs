@@ -7,7 +7,7 @@ namespace SistemaBancario.BankAccounts
         public Checking(int number, IAccountOwner owner) : base(number, owner)
         {
             InitalLoanLimit = owner.MonthlyIncome * 0.3m;
-            CurrentLoanLimit = InitalLoanLimit;
+            LoanDebt = InitalLoanLimit;
             Type = "Corrente";
             WithdrawalTax = 0.05m;
         }

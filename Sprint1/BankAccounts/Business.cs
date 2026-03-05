@@ -7,7 +7,7 @@ namespace SistemaBancario.BankAccounts
         public Business(int number, IAccountOwner owner, decimal monthlyIncome) : base(number, owner)
         {
             InitalLoanLimit = monthlyIncome * 0.5m;
-            CurrentLoanLimit = InitalLoanLimit;
+            LoanDebt = InitalLoanLimit;
             Type = "Empresarial";
             WithdrawalTax = 0;
         }

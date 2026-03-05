@@ -5,8 +5,8 @@ namespace SistemaBancario.BankAccounts
     public abstract class BankAccount
     {
         public decimal Balance { get; protected set; } = 0;
-        public decimal InitalLoanLimit { get; protected set; }
-        public decimal CurrentLoanLimit { get; protected set; }
+        public decimal LoanLimit { get; protected set; }
+        public decimal LoanDebt { get; protected set; } = 0;
         public decimal WithdrawalTax { get; protected set; }
         public decimal Number { get; protected set; }
         public string OwnerIdentifier { get; protected set; }
@@ -76,15 +76,15 @@ namespace SistemaBancario.BankAccounts
 
                 if (validation.result)
                 {
-                    if (validation.amount > CurrentLoanLimit)
+                    if (validation.amount > (LoanLimit - LoanDebt))                     // Limite - Débito atual resulta no limite atual
                     {
                         Console.Clear();
-                        Console.WriteLine("Empréstimo excede o limite! Limite disponível: {0:n2}", CurrentLoanLimit);
+                        Console.WriteLine("Empréstimo excede o limite! Limite disponível: {0:n2}", LoanDebt);
                         validation.result = false;
                         continue;
                     }
 
-                    CurrentLoanLimit -= validation.amount;
+                    LoanDebt += validation.amount;
                     Balance += validation.amount;
 
                     Console.Clear();
@@ -96,11 +96,10 @@ namespace SistemaBancario.BankAccounts
         public void PayLoan()
         {
             var validation = (result: false, amount: 0m);
-            decimal debt = InitalLoanLimit - CurrentLoanLimit;
 
             while (!validation.result)
             {
-                if (debt == 0)
+                if (LoanDebt == 0)
                 {
                     Console.Clear();
                     Console.WriteLine("Você não possui dívida de empréstimo.");
@@ -114,7 +113,7 @@ namespace SistemaBancario.BankAccounts
                     return;
                 }
 
-                Console.WriteLine("Valor pendente: {0:n2}", debt);
+                Console.WriteLine("Valor pendente: {0:n2}", LoanDebt);
                 Console.WriteLine("Insira o valor que deseja pagar do seu empréstimo: ");
                 validation = Validation.Amount();
 
@@ -128,7 +127,7 @@ namespace SistemaBancario.BankAccounts
                         continue;
                     }
 
-                    if (validation.amount > debt)
+                    if (validation.amount > LoanDebt)
                     {
                         Console.Clear();
                         Console.WriteLine("Seu pagamento excede sua dívida! Tente novamente.");
@@ -136,10 +135,10 @@ namespace SistemaBancario.BankAccounts
                         continue;
                     }
 
-                    CurrentLoanLimit += validation.amount;
+                    LoanDebt -= validation.amount;
                     Balance -= validation.amount;
 
-                    if (InitalLoanLimit == CurrentLoanLimit)
+                    if (LoanDebt == 0)
                     {
                         Console.Clear();
                         Console.WriteLine("Parabéns! Dívida quitada. Saldo atual: {0:n2}", Balance);

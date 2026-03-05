@@ -67,80 +67,80 @@ namespace SistemaBancario
                         userPassword = Console.ReadLine();
 
                         currentUser = Utils.SearchUser(users, userEmail, userPassword);
-                        if (currentUser != null)
-                        {
-                            int homeOption;
-                            do
-                            {
-                                homeOption = Menu.Home(currentUser);
+                        //if (currentUser != null)
+                        //{
+                        //    int homeOption;
+                        //    do
+                        //    {
+                        //        homeOption = Menu.Home(currentUser);
 
-                                switch (homeOption)
-                                {
-                                    case 0:
-                                        break;
+                        //        switch (homeOption)
+                        //        {
+                        //            case 0:
+                        //                break;
 
-                                    case 1:
-                                        int userType;
+                        //            case 1:
+                        //                int userType;
                                         
-                                        do
-                                        {
-                                            userType = Menu.UserType();
+                        //                do
+                        //                {
+                        //                    userType = Menu.UserType();
 
-                                            switch (userType)
-                                            {
-                                                case 0:
-                                                    break;
+                        //                    switch (userType)
+                        //                    {
+                        //                        case 0:
+                        //                            break;
 
-                                                case 1:
-                                                    Controller.AccountType(currentUser, )
-                                                    break;
+                        //                        case 1:
+                        //                            Controller.AccountType(, user);
+                        //                            break;
 
-                                                case 2:
-                                                    break;
+                        //                        case 2:
+                        //                            break;
 
-                                                default:
-                                                    break;
-                                            }
-                                        }
+                        //                        default:
+                        //                            break;
+                        //                    }
+                        //                }
 
 
-                                        Random rdn = new Random();
-                                        IAccountOwner? client;
+                        //                Random rdn = new Random();
+                        //                IAccountOwner? client;
 
-                                        string? ownerCpf = Validation.Cpf();
-                                        if (ownerCpf == null) break;
+                        //                string? ownerCpf = Validation.Cpf();
+                        //                if (ownerCpf == null) break;
 
-                                        client = Utils.SearchOwner(owners, ownerCpf);
+                        //                client = Utils.SearchOwner(owners, ownerCpf);
 
-                                        if (client == null)
-                                        {
-                                            Console.Clear();
-                                            string? ownerName = Validation.Name();
+                        //                if (client == null)
+                        //                {
+                        //                    Console.Clear();
+                        //                    string? ownerName = Validation.Name();
 
-                                            Console.Clear();
-                                            ownerAge = Validation.Age();
+                        //                    Console.Clear();
+                        //                    ownerAge = Validation.Age();
 
-                                            Console.Clear();
-                                            decimal ownerMonthlyIncome = Validation.MonthlyIncome("Insira a sua renda mensal: ");
+                        //                    Console.Clear();
+                        //                    decimal ownerMonthlyIncome = Validation.MonthlyIncome("Insira a sua renda mensal: ");
 
-                                            client = new Person(ownerAge, ownerCpf, ownerMonthlyIncome, ownerName);
-                                            owners.Add(client);
-                                        }
+                        //                    client = new Person(ownerAge, ownerCpf, ownerMonthlyIncome, ownerName);
+                        //                    owners.Add(client);
+                        //                }
 
-                                        Console.Clear();
-                                        Controller.AccountType(client, bankAccounts);
+                        //                Console.Clear();
+                        //                Controller.AccountType(client, bankAccounts);
 
-                                        break;
+                        //                break;
 
-                                    case 2:
-                                        break;
+                        //            case 2:
+                        //                break;
 
-                                    case 3:
-                                        break;
-                                }
+                        //            case 3:
+                        //                break;
+                        //        }
 
-                            } while (homeOption != 0);
-                        }
+                        //    } while (homeOption != 0);
+                        //}
                         break;
 
                     case 3:
