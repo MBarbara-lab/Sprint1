@@ -1,6 +1,9 @@
 // ===============================================================================================================================================
 // EXTRA:
-// - deixar de passar user total e passar só o id?
+// - Trocar lógica de busca por find()
+// - Função Transferir
+// -> Padrão MVC simplificado, class View, Controller e Model
+// -> UI nos textos: https://gemini.google.com/app/a9e3bd3d2f67f91b?hl=pt-BR
 // -> Melhorar aleatoridade do id de usuário
 // -> Função de hash p senhas
 // -> Empresarial vai passar a receber cnpj (alfanumérico) e pessoa vai passar a possuir cnpj tbm ;)
@@ -9,17 +12,17 @@
 // -> Usar construtor primário
 // -> Contas compartilhadas
 
+
 // PENDENTES:
 // - exclusão age validation
 // - Verificação data de nascimento
 // - Verificar email válido
 // - Verificar senha válida
 // - Verificação cnpj
-// - Função Transferir
+// - Verificação se já existe alguma empresa cadastrada com esse cnpj
 // - Alterar dados pessoais
-// - Pagar empréstimo. Se pagar parcelado, juros cumulativos
-// - Padrão MVC simplificado, class View, Controller e Model
-// - UI nos textos: https://gemini.google.com/app/a9e3bd3d2f67f91b?hl=pt-BR
+// - Pagar empréstimo. Juros simples no valor da dívida
+
 
 // EM PROPGRESSO:
 // - criação de conta. se pj, direto p conta empresárial. else, escolhe entre poupança e corrente
@@ -59,6 +62,8 @@ namespace SistemaBancario
 
                     case 1:
                         int userId = rdn.Next(100, 900);
+                        
+                        Console.Clear();
                         Console.WriteLine("Informe o email que deseja cadastrar:");
                         userEmail = Console.ReadLine();
 
@@ -67,14 +72,18 @@ namespace SistemaBancario
 
                         User newUser = new User(userId, userEmail, userPassword);
                         users.Add(newUser);
+                        
+                        Console.Clear();
                         break;
 
                     case 2:
+                        Console.Clear();
                         Console.WriteLine("Informe seu email:");
                         userEmail = Console.ReadLine();
 
                         Console.WriteLine("Informe sua senha:");
                         userPassword = Console.ReadLine();
+                        Console.Clear();
 
                         currentUser = Utils.SearchUser(users, userEmail, userPassword);
                         if (currentUser == null) {
@@ -92,14 +101,13 @@ namespace SistemaBancario
                             switch (homeOption)
                             {
                                 case 0:
+                                    Console.Clear();
                                     break;
 
                                 case 1:
-                                    //Random rdn = new Random();
+                                    Console.Clear();
                                     int accountNumber;
-                                    Company? newCompany;
-                                        
-                                    Person? newPerson;
+                                    IAccountOwner newOwner;
 
                                     int userType;
                                     do
@@ -109,29 +117,33 @@ namespace SistemaBancario
                                         switch (userType)
                                         {
                                             case 0:
+                                                Console.Clear();
                                                 break;
 
                                             case 1:
-                                                string? ownerCpf = Validation.Cpf();
-                                                if (ownerCpf == null) break;
+                                                Console.Clear();
+                                                newOwner = Utils.SearchOwner(owners, currentUser.Id);
 
-                                                newPerson = Utils.SearchPerson(people, ownerCpf);
-                                                if (newPerson == null)
+                                                if (newOwner == null)
                                                 {
+                                                    string ownerCpf = Validation.Cpf();
+
                                                     Console.Clear();
                                                     string? ownerName = Validation.Name("Insira seu nome: ");
 
+                                                    Console.Clear();
+                                                    Console.WriteLine("Insira sua data de nascimento:");
                                                     string? ownerDateOfBirth = Console.ReadLine();
 
                                                     Console.Clear();
                                                     decimal ownerMonthlyIncome = Validation.MonthlyIncome("Insira a sua renda mensal: ");
 
-                                                    newPerson = new Person(currentUser.Id, ownerCpf, ownerDateOfBirth, ownerMonthlyIncome, ownerName);
-                                                    people.Add(newPerson);
+                                                    newOwner = new Person(currentUser.Id, ownerCpf, ownerDateOfBirth, ownerMonthlyIncome, ownerName);
+                                                    owners.Add(newOwner);
                                                 }
 
                                                 Console.Clear();
-                                                Controller.AccountType(currentUser, newPerson, bankAccounts);
+                                                Controller.AccountType(currentUser.Id, newOwner, bankAccounts);
                                                 isAccountCreated = true;
                                                 break;
 
@@ -142,13 +154,16 @@ namespace SistemaBancario
                                                 Console.Clear();
                                                 string? companyName = Validation.Name("Insira o nome da sua empresa: ");
 
+                                                Console.Clear();
+                                                Console.WriteLine("Insira o CNPJ da empresa: ");
                                                 string? companyCnpj = Console.ReadLine();
 
+                                                Console.Clear();
                                                 decimal revenue = Validation.MonthlyIncome("Insira a renda mensal do seu negócio: ");
 
-                                                newCompany = new Company(currentUser.Id, companyCnpj, companyName, revenue);
+                                                newOwner = new Company(currentUser.Id, companyCnpj, companyName, revenue);
                                                 
-                                                bankAccounts.Add(new Business(accountNumber, newCompany, currentUser));
+                                                bankAccounts.Add(new Business(accountNumber, newOwner, currentUser.Id));
 
                                                 Console.Clear();
                                                 Console.WriteLine("Sua conta empresarial foi criada!");
@@ -156,26 +171,58 @@ namespace SistemaBancario
                                                 break;
 
                                             default:
+                                                Console.Clear();
+                                                Console.WriteLine("Opção inválida!");
                                                 break;
                                         }
                                     } while (userType != 0 && !isAccountCreated);
+
                                     break;
 
-                                    case 2:
+                                case 2:
+                                    BankAccount? currentBankAccount;
                                         
-                                        break;
+                                    Console.Clear();
+                                    currentBankAccount = Menu.UserAccounts(currentUser.Id, owners, bankAccounts);
 
-                                    case 3:
-                                        break;
+                                    Controller.Transactions(currentBankAccount);
+                                    break;
+
+                                default:
+                                    break;
                                 }
 
-                            } while (homeOption != 0 && !isAccountCreated);
+                            } while (homeOption != 0);
                         break;
 
                     case 3:
+                        int devModeOption;
+                        do
+                        {
+                            devModeOption = Menu.DevOptions();
+
+                            switch (devModeOption)
+                            {
+                                case 0:
+                                    Console.Clear();
+                                    break;
+
+                                case 1:
+                                    Console.Clear();
+                                    Utils.PrintAccounts(bankAccounts, owners);
+                                    break;
+
+                                case 2:
+                                    Console.Clear();
+                                    Utils.PrintUsers(users);
+                                    break;
+                            }
+                        } while (devModeOption != 0);
                         break;
 
                     default:
+                        Console.Clear();
+                        Console.WriteLine("Opção inválida!");
                         break;
                 }
 

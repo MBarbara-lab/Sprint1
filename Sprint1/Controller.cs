@@ -5,13 +5,15 @@ namespace SistemaBancario
 {
     public class Controller
     {
-        public static void AccountType (User user, IAccountOwner client, List<BankAccount> bankAccounts)
+        public static void AccountType (int userId, IAccountOwner client, List<BankAccount> bankAccounts)
         {
             int option = 1;
+            
             Random rdn = new Random();
             int accountNumber;
-            bool isAccountCreated = false;
+            
             BankAccount newAccount;
+            bool isAccountCreated = false;
 
             while (option != 0 && !isAccountCreated)
             {
@@ -26,7 +28,7 @@ namespace SistemaBancario
                         Console.Clear();
                         accountNumber = rdn.Next(100000, 200000);
 
-                        newAccount = new Checking(accountNumber, client);
+                        newAccount = new Checking(accountNumber, client, userId);
                         bankAccounts.Add(newAccount);
 
                         Console.WriteLine("Sua conta corrente foi criada!");
@@ -37,7 +39,9 @@ namespace SistemaBancario
                         Console.Clear();
                         accountNumber = rdn.Next(100000, 200000);
 
-                        bankAccounts.Add(new Saving(accountNumber, client));
+                        newAccount = new Saving(accountNumber, client, userId);
+                        bankAccounts.Add(newAccount);
+
                         Console.WriteLine("Sua conta poupança foi criada!");
                         isAccountCreated = true;
                         break;

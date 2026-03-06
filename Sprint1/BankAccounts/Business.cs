@@ -4,9 +4,9 @@ namespace SistemaBancario.BankAccounts
 {
     class Business : BankAccount
     {
-        public Business(int number, IAccountOwner company, User user) : base(number, company, user)
+        public Business(int number, IAccountOwner company, int userId) : base(number, company, userId)
         {
-            UserId = user.Id;
+            UserId = userId;
 
             LoanLimit = company.MonthlyIncome * 0.5m;
             Type = "Empresarial";

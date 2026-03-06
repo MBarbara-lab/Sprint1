@@ -14,9 +14,9 @@ namespace SistemaBancario.BankAccounts
         public decimal Number { get; protected set; }
         public string? Type { get; protected set; }
 
-        public BankAccount(int number, IAccountOwner owner, User user)
+        public BankAccount(int number, IAccountOwner owner, int userId)
         {
-            UserId = user.Id;
+            UserId = userId;
             OwnerIdentifier = owner.Identifier;
 
             Number = number;
@@ -83,7 +83,7 @@ namespace SistemaBancario.BankAccounts
                     if (validation.amount > (LoanLimit - LoanDebt))                     // Limite - Débito atual resulta no limite atual
                     {
                         Console.Clear();
-                        Console.WriteLine("Empréstimo excede o limite! Limite disponível: {0:n2}", LoanDebt);
+                        Console.WriteLine("Empréstimo excede o limite! Limite disponível: {0:n2}", (LoanLimit - LoanDebt));
                         validation.result = false;
                         continue;
                     }

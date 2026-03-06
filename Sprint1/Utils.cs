@@ -5,14 +5,35 @@ namespace SistemaBancario
 {
     class Utils
     {
+        public static void PrintUsers(List<User> users)
+        {
+            foreach (User user in users)
+            {
+                if (user == null) {
+                    Console.Clear();
+                    Console.WriteLine("Não há nenhum usuário cadastrado.");
+                    break;
+                };
+
+                Console.WriteLine("Titular {0}", user.Id);
+                Console.WriteLine(" Email {0}", user.Email);
+                Console.WriteLine(" Senha {0}", user.Password);
+                //Console.WriteLine(" Tipo:  {0}", user.PersonCpf);
+            }
+        }
+
         public static void PrintAccounts<T>(List<T> list, List<IAccountOwner> owners) where T : BankAccount
         {
             IAccountOwner? currentOwner;
             foreach (T account in list)
             {
-                currentOwner = Utils.SearchOwner(owners, account.OwnerIdentifier);
+                currentOwner = Utils.SearchOwner(owners, account.UserId);
 
-                if (currentOwner == null) continue;
+                if (account == null || currentOwner == null)
+                {
+                    Console.WriteLine("Nenhuma conta encontrada.");
+                    break;
+                }
 
                 Console.WriteLine("Titular {0}", currentOwner.Name);
                 Console.WriteLine(" Tipo:  {0}", account.Type);
@@ -21,11 +42,11 @@ namespace SistemaBancario
             }
         }
 
-        public static IAccountOwner? SearchOwner(List<IAccountOwner> owners, string searchedIdentifier)
+        public static IAccountOwner? SearchOwner(List<IAccountOwner> owners, int searchedUserId)
         {
             foreach (IAccountOwner owner in owners)
             {
-                if (owner.Identifier == searchedIdentifier) return owner;
+                if (owner.UserId == searchedUserId) return owner;
             }
             return null;
         }
@@ -51,9 +72,9 @@ namespace SistemaBancario
         public static User? SearchUser(List<User> users, string searchedEmail, string searchedPassword)
         {
             int i = 0;
-            while (users[i].Email != searchedEmail) i++;
+            while (i < users.Count && users[i].Email != searchedEmail) i++;
 
-            if (i >= users.Count() || users[i].Password == searchedPassword) return null;
+            if (i >= users.Count() || users[i].Password != searchedPassword) return null;
             
             return users[i];
         }

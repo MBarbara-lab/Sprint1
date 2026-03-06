@@ -4,9 +4,9 @@ namespace SistemaBancario.BankAccounts
 {
     class Saving : BankAccount
     {
-        public Saving(int number, IAccountOwner owner, User user) : base(number, owner, user)
+        public Saving(int number, IAccountOwner owner, int userId) : base(number, owner, userId)
         {
-            UserId = user.Id;
+            UserId = userId;
             
             LoanLimit = owner.MonthlyIncome * 0.3m;
             Type = "Poupança";
