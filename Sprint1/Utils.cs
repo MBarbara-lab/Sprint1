@@ -18,7 +18,7 @@ namespace SistemaBancario
                 Console.WriteLine("Titular {0}", user.Id);
                 Console.WriteLine(" Email {0}", user.Email);
                 Console.WriteLine(" Senha {0}", user.Password);
-                //Console.WriteLine(" Tipo:  {0}", user.PersonCpf);
+                Console.WriteLine(" Tipo:  {0}", user.PersonCpf);
             }
         }
 

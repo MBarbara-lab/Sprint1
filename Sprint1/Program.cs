@@ -18,8 +18,6 @@
 // PENDENTES:
 // - exclusão age validation
 // - Verificação data de nascimento
-// - Verificar email válido
-// - Verificar senha válida
 // - Verificação cnpj
 // - Verificação se já existe alguma empresa cadastrada com esse cnpj
 // - Alterar dados pessoais
@@ -66,10 +64,9 @@ namespace SistemaBancario
                         int userId = rdn.Next(100, 900);
                         
                         Console.Clear();
-                        userEmail = Validation.Email("Informe o email que deseja cadastrar:");
+                        userEmail = Validation.Email("Informe o email que deseja cadastrar:", users);
 
-                        Console.WriteLine("Informe a senha que deseja cadastrar:");
-                        userPassword = Console.ReadLine();
+                        userPassword = Validation.Password("Informe a senha que deseja cadastrar:");
 
                         User newUser = new User(userId, userEmail, userPassword);
                         users.Add(newUser);
@@ -79,11 +76,11 @@ namespace SistemaBancario
 
                     case 2:
                         Console.Clear();
-                        userEmail = Validation.Email("Informe seu email: ");
+                        Console.WriteLine("Informe seu email: ");
+                        userEmail = Console.ReadLine();
 
-                        Console.WriteLine("Informe sua senha:");
+                        Console.WriteLine("Informe sua senha: ");
                         userPassword = Console.ReadLine();
-                        Console.Clear();
 
                         currentUser = Utils.SearchUser(users, userEmail, userPassword);
                         if (currentUser == null) {
@@ -92,6 +89,7 @@ namespace SistemaBancario
                             break;
                         }
 
+                        Console.Clear();
                         int homeOption;
                         bool isAccountCreated = false;
                         do
@@ -126,7 +124,7 @@ namespace SistemaBancario
 
                                                 if (newOwner == null)
                                                 {
-                                                    string ownerCpf = Validation.Cpf();
+                                                    string ownerCpf = Validation.Cpf(users);
 
                                                     Console.Clear();
                                                     string? ownerName = Validation.Name("Insira seu nome: ");
@@ -138,6 +136,7 @@ namespace SistemaBancario
                                                     Console.Clear();
                                                     decimal ownerMonthlyIncome = Validation.MonthlyIncome("Insira a sua renda mensal: ");
 
+                                                    currentUser.setPersonCpf(ownerCpf);
                                                     newOwner = new Person(currentUser.Id, ownerCpf, ownerDateOfBirth, ownerMonthlyIncome, ownerName);
                                                     owners.Add(newOwner);
                                                 }
@@ -196,8 +195,10 @@ namespace SistemaBancario
                                     break;
 
                                 default:
+                                    Console.Clear();
+                                    Console.WriteLine("Opção inválida!");
                                     break;
-                                }
+                            }
 
                             } while (homeOption != 0);
                         break;

@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualBasic.FileIO;
+﻿using SistemaBancario.Owner;
 
 namespace SistemaBancario
 {
@@ -34,7 +34,7 @@ namespace SistemaBancario
         //    return age;
         //}
 
-        static public string? Cpf()
+        static public string? Cpf(List<User> users)
         {
             bool isValidInput;
             string? cpf;
@@ -70,6 +70,16 @@ namespace SistemaBancario
                     Console.Clear();
                     Console.WriteLine("Seu CPF deve conter 11 dígitos! Tente novamente.");
                     isValidInput = false;
+                }
+
+                foreach (User user in users)
+                {
+                    if (user.PersonCpf == cpf)
+                    {
+                        Console.Clear();
+                        Console.WriteLine("Esse CPF já está cadastrado.");
+                        isValidInput = false;
+                    }
                 }
             } while (cpf == "" || !isValidInput);
 
@@ -152,7 +162,7 @@ namespace SistemaBancario
             return (isValidInput, option);
         }
 
-        static public string? Email(string text)
+        static public string? Email(string text, List<User> users)
         {
             string? email;
             bool isValidInput, containsAt = false;
@@ -194,9 +204,55 @@ namespace SistemaBancario
                     isValidInput = false;
                     continue;
                 }
+
+                foreach (User user in users)
+                {
+                    if (user.Email == email)
+                    {
+                        Console.Clear();
+                        Console.WriteLine("Esse email já está cadastrado.");
+                        isValidInput = false;
+                    }
+                }
+
             } while (email == "" || !isValidInput);
 
             return email;
+        }
+
+        static public string? Password(string text)
+        {
+            bool isValidInput;
+            string? password;
+
+            do
+            {
+                isValidInput = true;
+                Console.WriteLine("{0}", text);
+                password = Console.ReadLine();
+                password = password?.Trim() ?? "";
+                
+                if (password == "")
+                {
+                    Console.Clear();
+                    Console.WriteLine("Sua senha não pode ser nula! Tente novamente.");
+                    continue;
+                }
+
+                foreach (char digit in password)
+                {
+                    if (!char.IsDigit(digit))
+                    {
+                        Console.Clear();
+                        Console.WriteLine("Sua senha deve conter apenas dígitos! Tente novamente.");
+                        isValidInput = false;
+                        break;
+                    }
+                }
+
+            } while (password == "" || !isValidInput);
+
+            return password;
         }
 
         static public (bool, decimal) Amount()
