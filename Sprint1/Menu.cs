@@ -72,12 +72,7 @@ namespace SistemaBancario
             {
                 IAccountOwner currentOwner = Utils.SearchOwner(owners, userId);
 
-                if (currentOwner == null)
-                {
-                    Console.Clear();
-                    Console.WriteLine("Você ainda não possui nenhuma conta.");
-                    break;
-                }
+                if (currentOwner == null) break;
 
                 Console.WriteLine("Olá, {0}! Selecione sua conta: ", currentOwner.Name);
 

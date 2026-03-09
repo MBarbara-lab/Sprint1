@@ -4,35 +4,35 @@ namespace SistemaBancario
 {
     internal class Validation
     {
-        static public int Age()
-        {
-            bool isValidInput;
-            int age;
+        //static public int Age()
+        //{
+        //    bool isValidInput;
+        //    int age;
 
-            do
-            {
-                Console.WriteLine("Insira sua idade:");
-                isValidInput = int.TryParse(Console.ReadLine(), out age);
+        //    do
+        //    {
+        //        Console.WriteLine("Insira sua idade:");
+        //        isValidInput = int.TryParse(Console.ReadLine(), out age);
 
-                if (!isValidInput || age <= 0 || age > 130)
-                {
-                    Console.Clear();
-                    Console.WriteLine("Idade inválida");
-                    isValidInput = false;
-                    continue;
-                }
+        //        if (!isValidInput || age <= 0 || age > 130)
+        //        {
+        //            Console.Clear();
+        //            Console.WriteLine("Idade inválida");
+        //            isValidInput = false;
+        //            continue;
+        //        }
 
-                if (age < 18)
-                {
-                    Console.Clear();
-                    Console.WriteLine("Você não possui idade suficiente para abrir uma conta!");
-                    isValidInput = false;
-                }
+        //        if (age < 18)
+        //        {
+        //            Console.Clear();
+        //            Console.WriteLine("Você não possui idade suficiente para abrir uma conta!");
+        //            isValidInput = false;
+        //        }
 
-            } while (!isValidInput || age <= 0);
+        //    } while (!isValidInput || age <= 0);
 
-            return age;
-        }
+        //    return age;
+        //}
 
         static public string? Cpf()
         {
@@ -96,6 +96,7 @@ namespace SistemaBancario
 
             return monthlyIncome;
         }
+        
         static public string? Name(string text)
         {
             bool isValidInput;
@@ -119,7 +120,7 @@ namespace SistemaBancario
                     if (!char.IsLetter(letter) && !char.IsWhiteSpace(letter))
                     {
                         Console.Clear();
-                        Console.WriteLine("Seu nome deve conter apenas letras não acentuadas e espaços! Tente novamente.");
+                        Console.WriteLine("Seu nome deve conter apenas letras e espaços! Tente novamente.");
                         isValidInput = false;
                         break;
                     }
@@ -149,6 +150,53 @@ namespace SistemaBancario
             }
 
             return (isValidInput, option);
+        }
+
+        static public string? Email(string text)
+        {
+            string? email;
+            bool isValidInput, containsAt = false;
+
+            do
+            {
+                isValidInput = true;
+
+                Console.WriteLine("{0}", text);
+                email = Console.ReadLine();
+                email = email?.Trim() ?? "";
+
+                if (email == "")
+                {
+                    Console.Clear();
+                    Console.WriteLine("Seu email não pode ser nulo! Tente novamente.");
+                    continue;
+                }
+
+                int i = 0;
+                while (i < email.Length)
+                {
+                    if (email[i] == '@') containsAt = true;
+
+                    if (!char.IsAsciiLetterOrDigit(email[i]) && (email[i] != '.') && (email[i] != '_') && (email[i] != '@'))
+                    {
+                        Console.Clear();
+                        Console.WriteLine("Seu email deve conter apenas letras não acentuadas, dígitos, \".\" e/ou \"_\"! Tente novamente.");
+                        isValidInput = false;
+                        break;
+                    }
+                    i++;
+                }
+
+                if (!containsAt)
+                {
+                    Console.Clear();
+                    Console.WriteLine("Seu email deve conter um domínio. Ex.: @gmail.com, @hotmail.com, etc.");
+                    isValidInput = false;
+                    continue;
+                }
+            } while (email == "" || !isValidInput);
+
+            return email;
         }
 
         static public (bool, decimal) Amount()

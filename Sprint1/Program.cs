@@ -2,6 +2,8 @@
 // EXTRA:
 // - Trocar lógica de busca por find()
 // - Função Transferir
+// -> verificações com regex: cpf, cnpj, email
+// -> Função Excluir conta
 // -> Padrão MVC simplificado, class View, Controller e Model
 // -> UI nos textos: https://gemini.google.com/app/a9e3bd3d2f67f91b?hl=pt-BR
 // -> Melhorar aleatoridade do id de usuário
@@ -25,7 +27,7 @@
 
 
 // EM PROPGRESSO:
-// - criação de conta. se pj, direto p conta empresárial. else, escolhe entre poupança e corrente
+// -> 
 // -> isaccountcreated tá duplicada
 
 // ===============================================================================================================================================
@@ -64,8 +66,7 @@ namespace SistemaBancario
                         int userId = rdn.Next(100, 900);
                         
                         Console.Clear();
-                        Console.WriteLine("Informe o email que deseja cadastrar:");
-                        userEmail = Console.ReadLine();
+                        userEmail = Validation.Email("Informe o email que deseja cadastrar:");
 
                         Console.WriteLine("Informe a senha que deseja cadastrar:");
                         userPassword = Console.ReadLine();
@@ -78,8 +79,7 @@ namespace SistemaBancario
 
                     case 2:
                         Console.Clear();
-                        Console.WriteLine("Informe seu email:");
-                        userEmail = Console.ReadLine();
+                        userEmail = Validation.Email("Informe seu email: ");
 
                         Console.WriteLine("Informe sua senha:");
                         userPassword = Console.ReadLine();
@@ -184,6 +184,13 @@ namespace SistemaBancario
                                         
                                     Console.Clear();
                                     currentBankAccount = Menu.UserAccounts(currentUser.Id, owners, bankAccounts);
+
+                                    if (currentBankAccount == null)
+                                    {
+                                        Console.Clear();
+                                        Console.WriteLine("Você ainda não possui nenhuma conta.");
+                                        break;
+                                    }
 
                                     Controller.Transactions(currentBankAccount);
                                     break;
