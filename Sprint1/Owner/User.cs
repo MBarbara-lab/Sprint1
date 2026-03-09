@@ -7,7 +7,7 @@
         public string Password { get; protected set; }
 
         public string? PersonCpf { get; protected set; }
-        public List<string>? CompanyCnpj = new List<string>();
+        public List<string>? CompanyCnpjs = new List<string>();
 
         public void setPersonCpf (string? cpf)
         {

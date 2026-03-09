@@ -1,5 +1,6 @@
 // ===============================================================================================================================================
 // EXTRA:
+// - possibilitar abortar transação/criação de conta/ cadastro/etc
 // - Trocar lógica de busca por find()
 // - Função Transferir
 // -> verificações com regex: cpf, cnpj, email
@@ -13,19 +14,20 @@
 //      + Verificação de CNPJ válido
 // -> Usar construtor primário
 // -> Contas compartilhadas
+// - Alterar dados pessoais
 
 
 // PENDENTES:
-// - exclusão age validation
 // - Verificação data de nascimento
+// - exclusão age validation
 // - Verificação cnpj
 // - Verificação se já existe alguma empresa cadastrada com esse cnpj
-// - Alterar dados pessoais
 // - Pagar empréstimo. Juros simples no valor da dívida
 
 
 // EM PROPGRESSO:
-// -> 
+// -> validação de data tá deixando passar menor de idade
+// -> try catch na conversão da data
 // -> isaccountcreated tá duplicada
 
 // ===============================================================================================================================================
@@ -130,8 +132,9 @@ namespace SistemaBancario
                                                     string? ownerName = Validation.Name("Insira seu nome: ");
 
                                                     Console.Clear();
-                                                    Console.WriteLine("Insira sua data de nascimento:");
-                                                    string? ownerDateOfBirth = Console.ReadLine();
+                                                    string? ownerDateOfBirth = Validation.DateOfBirth();
+                                                    //Console.WriteLine("Insira sua data de nascimento:");
+                                                    //ownerDateOfBirth = Console.ReadLine();
 
                                                     Console.Clear();
                                                     decimal ownerMonthlyIncome = Validation.MonthlyIncome("Insira a sua renda mensal: ");
@@ -156,6 +159,7 @@ namespace SistemaBancario
                                                 Console.Clear();
                                                 Console.WriteLine("Insira o CNPJ da empresa: ");
                                                 string? companyCnpj = Console.ReadLine();
+                                                //currentUser.CompanyCnpjs.Add(companyCnpj);
 
                                                 Console.Clear();
                                                 decimal revenue = Validation.MonthlyIncome("Insira a renda mensal do seu negócio: ");

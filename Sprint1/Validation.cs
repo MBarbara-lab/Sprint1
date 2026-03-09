@@ -86,6 +86,76 @@ namespace SistemaBancario
             return cpf;
         }
 
+        static public string DateOfBirth ()
+        {
+            bool isValidInput;
+            string? dateOfBirth;
+
+            do
+            {
+                isValidInput = true;
+                Console.WriteLine("Insira sua data de nascimento: ");
+                dateOfBirth = Console.ReadLine();
+                dateOfBirth = dateOfBirth?.Trim() ?? "";
+                
+                if (dateOfBirth == "")
+                {
+                    Console.Clear();
+                    Console.WriteLine("Sua data de nascimento não pode ser nula! Tente novamente.");
+                    continue;
+                }
+
+                foreach (char digit in dateOfBirth)
+                {
+                    if (!char.IsDigit(digit))
+                    {
+                        Console.Clear();
+                        Console.WriteLine("Sua data de nascimento deve conter apenas dígitos! Tente novamente.");
+                        isValidInput = false;
+                        break;
+                    }
+                }
+
+                if (!isValidInput) continue;
+
+                if (dateOfBirth.Length != 8)
+                {
+                    Console.Clear();
+                    Console.WriteLine("Sua data de nascimento deve conter 8 dígitos! Ex.: 15082007");
+                    isValidInput = false;
+                    continue;
+                }
+
+                string yearS, monthS, dayS;
+                yearS = dateOfBirth.Substring(dateOfBirth.Length - 4 - 1);          // 4 últimos dígitos + converte p 0-based
+                monthS = dateOfBirth.Substring(dateOfBirth.Length - 6 - 1, 2);      // Pega 2 dos 6 últimos dígitos e converte p 0-based
+                dayS = dateOfBirth.Substring(0, 2);
+
+                var dateOfBirthI = (
+                    year: int.Parse(yearS),
+                    month: int.Parse(monthS),
+                    day: int.Parse(dayS)
+                );
+
+                DateOnly birthDate = new DateOnly();
+                DateOnly currentDate = DateOnly.FromDateTime(DateTime.Now);
+                int age = currentDate.Year - birthDate.Year;
+
+                // Se a data atual for menor que o dia do aniversário este ano, subtraímos 1
+                if (currentDate < birthDate.AddYears(age)) age--;
+
+                if (age < 18)
+                {
+                    Console.Clear();
+                    Console.WriteLine("Você não possui idade suficiente para abrir uma conta!");
+                    isValidInput = false;
+                }
+
+            } while (dateOfBirth == "" || !isValidInput);
+
+            return dateOfBirth;
+        }
+
         static public decimal MonthlyIncome(string texto)
         {
             bool isValidInput;

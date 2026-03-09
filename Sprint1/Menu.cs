@@ -66,7 +66,6 @@ namespace SistemaBancario
             List<BankAccount> userAccounts = new List<BankAccount>();
 
             bool isValidInput = false;
-            int option = 1;
 
             while (!isValidInput)
             {
@@ -90,7 +89,7 @@ namespace SistemaBancario
                 }
                 Console.WriteLine("\n0 - Sair");
 
-                isValidInput = int.TryParse(Console.ReadLine(), out option);
+                isValidInput = int.TryParse(Console.ReadLine(), out int option);
                 if (option < 0 || option > userAccounts.Count || !isValidInput)
                 {
                     Console.Clear();
