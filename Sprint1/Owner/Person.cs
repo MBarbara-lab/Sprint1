@@ -2,13 +2,18 @@
 {
     public class Person : IAccountOwner
     {
+        public int UserId { get; protected set; }
         public string Identifier { get; protected set; }
         public string? Name { get; private set; }
         public decimal MonthlyIncome { get; protected set; }
+        public string Type { get; } = "Pessoa Física";
+
         public string DateOfBirth { get; private set; }
 
-        public Person(string cpf, string dateOfBirth, decimal salary, string? name)
+        public Person(int userId, string cpf, string dateOfBirth, decimal salary, string? name)
         {
+            UserId = userId;
+
             DateOfBirth = dateOfBirth;
             Identifier = cpf;
             MonthlyIncome = salary;

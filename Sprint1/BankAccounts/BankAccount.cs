@@ -4,18 +4,22 @@ namespace SistemaBancario.BankAccounts
 {
     public abstract class BankAccount
     {
+        public int UserId { get; protected set; }
+        public string? OwnerIdentifier { get; protected set; }
+        
         public decimal Balance { get; protected set; } = 0;
         public decimal LoanLimit { get; protected set; }
         public decimal LoanDebt { get; protected set; } = 0;
         public decimal WithdrawalTax { get; protected set; }
         public decimal Number { get; protected set; }
-        public string OwnerIdentifier { get; protected set; }
         public string? Type { get; protected set; }
 
-        public BankAccount(int number, string ownerIdentifier)
+        public BankAccount(int number, IAccountOwner owner, int userId)
         {
+            UserId = userId;
+            OwnerIdentifier = owner.Identifier;
+
             Number = number;
-            OwnerIdentifier = ownerIdentifier;
         }
 
         public void Withdrawal(decimal withdrawalTax) {
@@ -76,10 +80,10 @@ namespace SistemaBancario.BankAccounts
 
                 if (validation.result)
                 {
-                    if (validation.amount > (LoanLimit - LoanDebt))                     // Limite - Débito atual resulta no limite atual
+                    if (validation.amount > (LoanLimit - LoanDebt))                     // (Limite - Débito atual) resulta no limite atual
                     {
                         Console.Clear();
-                        Console.WriteLine("Empréstimo excede o limite! Limite disponível: {0:n2}", LoanDebt);
+                        Console.WriteLine("Empréstimo excede o limite! Limite disponível: {0:n2}", (LoanLimit - LoanDebt));
                         validation.result = false;
                         continue;
                     }
@@ -154,7 +158,7 @@ namespace SistemaBancario.BankAccounts
 
         public virtual void IncomeForecast()
         {
-            Console.WriteLine("Essa conta não possui rendimento.");
+            Console.WriteLine("Esse tipo de conta não possui rendimento.");
         }
 
         public void Transfer()

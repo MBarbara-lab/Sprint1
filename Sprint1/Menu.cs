@@ -51,7 +51,7 @@ namespace SistemaBancario
                 Console.WriteLine("Olá! O que deseja fazer?");
                 Console.WriteLine("1 - Abrir conta bancária");
                 Console.WriteLine("2 - Selecionar conta bancária");
-                Console.WriteLine("3 - Alterar dados pessoais");
+                //Console.WriteLine("3 - Alterar dados pessoais");
                 Console.WriteLine("0 - Sair");
 
                 validation = Validation.Option();
@@ -61,39 +61,30 @@ namespace SistemaBancario
             return 0;
         }
 
-        //public static int Home()
-        //{
-        //    var validation = (result: false, option: 1);
-
-        //    while (!validation.result)
-        //    {
-        //        Console.WriteLine("O que deseja fazer?");
-        //        Console.WriteLine("1 - Criar Conta");
-        //        Console.WriteLine("2 - Entrar na Conta");
-        //        Console.WriteLine("3 - Modo DEV");
-        //        Console.WriteLine("0 - Sair");
-
-        //        validation = Validation.Option();
-        //    }
-        //    return validation.option;
-        //}
-
-        public static BankAccount? UserAccounts(IAccountOwner person, List<BankAccount> bankAccounts)
+        public static BankAccount? UserAccounts(int userId, List<IAccountOwner> owners, List<BankAccount> bankAccounts)
         {
             List<BankAccount> userAccounts = new List<BankAccount>();
-            if (person == null) return null;
 
             bool isValidInput = false;
             int option = 1;
 
             while (!isValidInput)
             {
-                Console.WriteLine("Olá, {0}! Selecione sua conta: ", person.Name);
+                IAccountOwner currentOwner = Utils.SearchOwner(owners, userId);
+
+                if (currentOwner == null)
+                {
+                    Console.Clear();
+                    Console.WriteLine("Você ainda não possui nenhuma conta.");
+                    break;
+                }
+
+                Console.WriteLine("Olá, {0}! Selecione sua conta: ", currentOwner.Name);
 
                 int i = 1;
                 foreach (BankAccount account in bankAccounts)
                 {
-                    if (account.Owner.Identifier == person.Identifier)
+                    if (account.UserId == currentOwner.UserId)
                     {
                         Console.WriteLine("\n#{0} - Conta {1}", i, account.Type);
                         Console.Write("Saldo: {0}", account.Balance);
@@ -121,7 +112,6 @@ namespace SistemaBancario
                     Console.WriteLine("Número: {0} \t Saldo: {1:n2}", userAccounts[option - 1].Number, userAccounts[option - 1].Balance);
                     return userAccounts[option - 1];
                 }
-                else Console.Clear();
             }
             return null;
         }
@@ -144,7 +134,7 @@ namespace SistemaBancario
                 Console.WriteLine("3 - Prever Rendimento");
                 Console.WriteLine("4 - Sacar");
                 Console.WriteLine("5 - Solicitar Empréstimo");
-                Console.WriteLine("6 - Transferir");
+                //Console.WriteLine("6 - Transferir");
                 Console.WriteLine("0 - Sair");
 
                 validation = Validation.Option();
@@ -176,6 +166,7 @@ namespace SistemaBancario
             {
                 Console.WriteLine("Selecione o que deseja fazer:");
                 Console.WriteLine("1 - Listar todas as contas");
+                Console.WriteLine("2 - Listar todos os usuários");
                 Console.WriteLine("0 - Sair");
 
                 validation = Validation.Option();

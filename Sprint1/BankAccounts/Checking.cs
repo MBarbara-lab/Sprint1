@@ -4,10 +4,11 @@ namespace SistemaBancario.BankAccounts
 {
     public class Checking : BankAccount
     {
-        public Checking(int number, IAccountOwner owner) : base(number, owner)
+        public Checking(int number, IAccountOwner owner, int userId) : base(number, owner, userId)
         {
-            InitalLoanLimit = owner.MonthlyIncome * 0.3m;
-            LoanDebt = InitalLoanLimit;
+            UserId = userId;
+
+            LoanLimit = owner.MonthlyIncome * 0.3m;
             Type = "Corrente";
             WithdrawalTax = 0.05m;
         }

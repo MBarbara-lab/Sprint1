@@ -5,11 +5,14 @@ namespace SistemaBancario
 {
     public class Controller
     {
-        public static void AccountType (IAccountOwner client, List<BankAccount> bankAccounts)
+        public static void AccountType (int userId, IAccountOwner client, List<BankAccount> bankAccounts)
         {
             int option = 1;
+            
             Random rdn = new Random();
             int accountNumber;
+            
+            BankAccount newAccount;
             bool isAccountCreated = false;
 
             while (option != 0 && !isAccountCreated)
@@ -25,7 +28,9 @@ namespace SistemaBancario
                         Console.Clear();
                         accountNumber = rdn.Next(100000, 200000);
 
-                        bankAccounts.Add(new Checking(accountNumber, client));
+                        newAccount = new Checking(accountNumber, client, userId);
+                        bankAccounts.Add(newAccount);
+
                         Console.WriteLine("Sua conta corrente foi criada!");
                         isAccountCreated = true;
                         break;
@@ -34,19 +39,9 @@ namespace SistemaBancario
                         Console.Clear();
                         accountNumber = rdn.Next(100000, 200000);
 
-                        decimal businessMonthlyIncome = Validation.MonthlyIncome("Insira a renda mensal do seu negócio: ");
+                        newAccount = new Saving(accountNumber, client, userId);
+                        bankAccounts.Add(newAccount);
 
-                        Console.Clear();
-                        bankAccounts.Add(new Business(accountNumber, client, businessMonthlyIncome));
-                        Console.WriteLine("Sua conta empresarial foi criada!");
-                        isAccountCreated = true;
-                        break;
-
-                    case 3:
-                        Console.Clear();
-                        accountNumber = rdn.Next(100000, 200000);
-
-                        bankAccounts.Add(new Saving(accountNumber, client));
                         Console.WriteLine("Sua conta poupança foi criada!");
                         isAccountCreated = true;
                         break;
