@@ -38,6 +38,7 @@ namespace SistemaBancario.BankAccounts
             totalAmount = Balance;
             for (int i = range; i > 0; i--) totalAmount *= (1 + Income);
 
+            Console.Clear();
             Console.WriteLine("Em {0} meses, seu saldo será de {1:n2}", range, totalAmount);
         }
     }

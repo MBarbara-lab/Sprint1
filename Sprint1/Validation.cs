@@ -2,38 +2,8 @@
 
 namespace SistemaBancario
 {
-    internal class Validation
+    class Validation
     {
-        //static public int Age()
-        //{
-        //    bool isValidInput;
-        //    int age;
-
-        //    do
-        //    {
-        //        Console.WriteLine("Insira sua idade:");
-        //        isValidInput = int.TryParse(Console.ReadLine(), out age);
-
-        //        if (!isValidInput || age <= 0 || age > 130)
-        //        {
-        //            Console.Clear();
-        //            Console.WriteLine("Idade inválida");
-        //            isValidInput = false;
-        //            continue;
-        //        }
-
-        //        if (age < 18)
-        //        {
-        //            Console.Clear();
-        //            Console.WriteLine("Você não possui idade suficiente para abrir uma conta!");
-        //            isValidInput = false;
-        //        }
-
-        //    } while (!isValidInput || age <= 0);
-
-        //    return age;
-        //}
-
         static public string? Cpf(List<User> users)
         {
             bool isValidInput;
@@ -127,8 +97,8 @@ namespace SistemaBancario
                 }
 
                 string yearS, monthS, dayS;
-                yearS = dateOfBirth.Substring(dateOfBirth.Length - 4 - 1);          // 4 últimos dígitos + converte p 0-based
-                monthS = dateOfBirth.Substring(dateOfBirth.Length - 6 - 1, 2);      // Pega 2 dos 6 últimos dígitos e converte p 0-based
+                yearS = dateOfBirth.Substring(dateOfBirth.Length - 4);          // 4 últimos dígitos + converte p 0-based
+                monthS = dateOfBirth.Substring(dateOfBirth.Length - 6, 2);      // Pega 2 dos 6 últimos dígitos e converte p 0-based
                 dayS = dateOfBirth.Substring(0, 2);
 
                 var dateOfBirthI = (
@@ -137,18 +107,49 @@ namespace SistemaBancario
                     day: int.Parse(dayS)
                 );
 
-                DateOnly birthDate = new DateOnly();
+                Console.WriteLine($"\t ano: {dateOfBirthI.year}");
+                Console.WriteLine($"\t mês: {dateOfBirthI.month}");
+                Console.WriteLine($"\t dia: {dateOfBirthI.day}");
+
+                DateOnly birthDate;
                 DateOnly currentDate = DateOnly.FromDateTime(DateTime.Now);
+
+                try
+                {
+                    birthDate = new DateOnly(dateOfBirthI.year, dateOfBirthI.month, dateOfBirthI.day);
+                }
+                catch
+                {
+                    Console.Clear();
+                    Console.WriteLine("Data de nascimento inválida! Tente novamente.");
+                    isValidInput = false;
+                    continue;
+                }
+
+                if (birthDate > currentDate)
+                {
+                    Console.Clear();
+                    Console.WriteLine("Data de nascimento inválida! Tente novamente.");
+                    isValidInput = false;
+                    continue;
+                }
+                
                 int age = currentDate.Year - birthDate.Year;
 
                 // Se a data atual for menor que o dia do aniversário este ano, subtraímos 1
                 if (currentDate < birthDate.AddYears(age)) age--;
-
                 if (age < 18)
                 {
                     Console.Clear();
                     Console.WriteLine("Você não possui idade suficiente para abrir uma conta!");
                     isValidInput = false;
+                    continue;
+                }
+                else if (age > 120) {
+                    Console.Clear();
+                    Console.WriteLine("Idade inválida! Tente novamente.");
+                    isValidInput = false;
+                    continue;
                 }
 
             } while (dateOfBirth == "" || !isValidInput);

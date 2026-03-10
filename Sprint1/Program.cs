@@ -133,8 +133,6 @@ namespace SistemaBancario
 
                                                     Console.Clear();
                                                     string? ownerDateOfBirth = Validation.DateOfBirth();
-                                                    //Console.WriteLine("Insira sua data de nascimento:");
-                                                    //ownerDateOfBirth = Console.ReadLine();
 
                                                     Console.Clear();
                                                     decimal ownerMonthlyIncome = Validation.MonthlyIncome("Insira a sua renda mensal: ");
