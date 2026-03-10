@@ -6,20 +6,16 @@
 // -> verificações com regex: cpf, cnpj, email
 // -> Função Excluir conta
 // -> Padrão MVC simplificado, class View, Controller e Model
-// -> UI nos textos: https://gemini.google.com/app/a9e3bd3d2f67f91b?hl=pt-BR
+// -> UI nos textos
 // -> Melhorar aleatoridade do id de usuário
 // -> Função de hash p senhas
-// -> Empresarial vai passar a receber cnpj (alfanumérico) e pessoa vai passar a possuir cnpj tbm ;)
-//      + Campo para o representante legal da empresa
-//      + Verificação de CNPJ válido
+// -> CNPJ alfanumérico
 // -> Usar construtor primário
 // -> Contas compartilhadas
 // - Alterar dados pessoais
 
 
 // PENDENTES:
-// - Verificação data de nascimento
-// - exclusão age validation
 // - Verificação cnpj
 // - Verificação se já existe alguma empresa cadastrada com esse cnpj
 // - Pagar empréstimo. Juros simples no valor da dívida
@@ -155,9 +151,8 @@ namespace SistemaBancario
                                                 string? companyName = Validation.Name("Insira o nome da sua empresa: ");
 
                                                 Console.Clear();
-                                                Console.WriteLine("Insira o CNPJ da empresa: ");
-                                                string? companyCnpj = Console.ReadLine();
-                                                //currentUser.CompanyCnpjs.Add(companyCnpj);
+                                                string? companyCnpj = Validation.Cnpj(users);
+                                                currentUser.CompanyCnpjs.Add(companyCnpj);
 
                                                 Console.Clear();
                                                 decimal revenue = Validation.MonthlyIncome("Insira a renda mensal do seu negócio: ");
@@ -205,30 +200,30 @@ namespace SistemaBancario
                             } while (homeOption != 0);
                         break;
 
-                    case 3:
-                        int devModeOption;
-                        do
-                        {
-                            devModeOption = Menu.DevOptions();
+                    //case 3:
+                    //    int devModeOption;
+                    //    do
+                    //    {
+                    //        devModeOption = Menu.DevOptions();
 
-                            switch (devModeOption)
-                            {
-                                case 0:
-                                    Console.Clear();
-                                    break;
+                    //        switch (devModeOption)
+                    //        {
+                    //            case 0:
+                    //                Console.Clear();
+                    //                break;
 
-                                case 1:
-                                    Console.Clear();
-                                    Utils.PrintAccounts(bankAccounts, owners);
-                                    break;
+                    //            case 1:
+                    //                Console.Clear();
+                    //                Utils.PrintAccounts(bankAccounts, owners);
+                    //                break;
 
-                                case 2:
-                                    Console.Clear();
-                                    Utils.PrintUsers(users);
-                                    break;
-                            }
-                        } while (devModeOption != 0);
-                        break;
+                    //            case 2:
+                    //                Console.Clear();
+                    //                Utils.PrintUsers(users);
+                    //                break;
+                    //        }
+                    //    } while (devModeOption != 0);
+                    //    break;
 
                     default:
                         Console.Clear();

@@ -16,7 +16,7 @@ namespace SistemaBancario
                 Console.WriteLine("Selecione uma opção:");
                 Console.WriteLine("1 - Cadastre-se");
                 Console.WriteLine("2 - Entrar");
-                Console.WriteLine("3 - Modo DEV");
+                //Console.WriteLine("3 - Modo DEV");
                 Console.WriteLine("0 - Encerrar");
 
                 validation = Validation.Option();

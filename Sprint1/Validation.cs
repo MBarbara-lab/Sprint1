@@ -56,6 +56,63 @@ namespace SistemaBancario
             return cpf;
         }
 
+        static public string? Cnpj(List<User> users)
+        {
+            bool isValidInput;
+            string? cnpj;
+
+            do
+            {
+                isValidInput = true;
+                Console.WriteLine("Insira o CNPJ da sua empresa: ");
+                Console.WriteLine("\t Obs.: apenas os primeiros 8 dígitos.");
+                cnpj = Console.ReadLine();
+                cnpj = cnpj?.Trim() ?? "";
+                if (cnpj == "")
+                {
+                    Console.Clear();
+                    Console.WriteLine("O CNPJ não pode ser nulo! Tente novamente.");
+                    continue;
+                }
+
+                foreach (char digit in cnpj)
+                {
+                    if (!char.IsDigit(digit))
+                    {
+                        Console.Clear();
+                        Console.WriteLine("O CNPJ deve conter apenas dígitos! Tente novamente.");
+                        isValidInput = false;
+                        break;
+                    }
+                }
+
+                if (!isValidInput) continue;
+
+                if (cnpj.Length != 8)
+                {
+                    Console.Clear();
+                    Console.WriteLine("O CNPJ deve conter 8 dígitos! Tente novamente.");
+                    isValidInput = false;
+                }
+
+                foreach (User user in users)
+                {
+                    foreach (string currentCnpj in user.CompanyCnpjs)
+                    {
+                        if (currentCnpj == cnpj)
+                        {
+                            Console.Clear();
+                            Console.WriteLine("Esse CPF já está cadastrado.");
+                            isValidInput = false;
+                            break;
+                        }
+                    }
+                }
+            } while (cnpj == "" || !isValidInput);
+
+            return cnpj;
+        }
+
         static public string DateOfBirth ()
         {
             bool isValidInput;
