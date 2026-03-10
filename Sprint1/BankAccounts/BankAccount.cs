@@ -11,6 +11,7 @@ namespace SistemaBancario.BankAccounts
         public decimal LoanLimit { get; protected set; }
         public decimal LoanDebt { get; protected set; } = 0;
         public decimal WithdrawalTax { get; protected set; }
+        
         public decimal Number { get; protected set; }
         public string? Type { get; protected set; }
 
@@ -88,7 +89,7 @@ namespace SistemaBancario.BankAccounts
                         continue;
                     }
 
-                    LoanDebt += validation.amount;
+                    LoanDebt += validation.amount * (1 + 0.05m);
                     Balance += validation.amount;
 
                     Console.Clear();
@@ -145,7 +146,7 @@ namespace SistemaBancario.BankAccounts
                     if (LoanDebt == 0)
                     {
                         Console.Clear();
-                        Console.WriteLine("Parabéns! Dívida quitada. Saldo atual: {0:n2}", Balance);
+                        Console.WriteLine("Parabéns! Dívida de empréstimo quitada. Saldo atual: {0:n2}", Balance);
                     }
                     else
                     {

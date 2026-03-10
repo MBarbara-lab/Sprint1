@@ -1,4 +1,6 @@
 // ===============================================================================================================================================
+
+
 // EXTRA:
 // - possibilitar abortar transação/criação de conta/ cadastro/etc
 // - Trocar lógica de busca por find()
@@ -14,17 +16,6 @@
 // -> Contas compartilhadas
 // - Alterar dados pessoais
 
-
-// PENDENTES:
-// - Verificação cnpj
-// - Verificação se já existe alguma empresa cadastrada com esse cnpj
-// - Pagar empréstimo. Juros simples no valor da dívida
-
-
-// EM PROPGRESSO:
-// -> validação de data tá deixando passar menor de idade
-// -> try catch na conversão da data
-// -> isaccountcreated tá duplicada
 
 // ===============================================================================================================================================
 
